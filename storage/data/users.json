@@ -1,0 +1,19 @@
+[ {
+  "id" : "admin",
+  "name" : "admin",
+  "pwHash" : "$2a$10$r.WohlZvG0/f8G1USkO4C.Vx4.cuIwyG7X3EbcEAeKRvHagCf76wa",
+  "createdAt" : "2026-05-08 13:58",
+  "updatedAt" : "2026-05-08 13:58"
+}, {
+  "id" : "123",
+  "name" : "123",
+  "pwHash" : "$2a$10$6zqfsSrvWaRC4ZM47NFeWeiMKFKA43qZFZw70bPbBtINPbYRg/X5.",
+  "createdAt" : "2026-05-14 12:01",
+  "updatedAt" : "2026-05-14 12:01"
+}, {
+  "id" : "1234",
+  "name" : "1234",
+  "pwHash" : "$2a$10$Iyl/ACFbV0cj.AGhtv/eNOMCs0pJOOkZGon/lwk6iVqTgWHa1pZsO",
+  "createdAt" : "2026-05-14 14:16",
+  "updatedAt" : "2026-05-14 14:16"
+} ]

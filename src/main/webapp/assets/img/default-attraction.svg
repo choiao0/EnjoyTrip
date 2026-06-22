@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="200" viewBox="0 0 300 200">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#e8f4fd;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#c8e6f9;stop-opacity:1"/>
+    </linearGradient>
+    <linearGradient id="mountain1" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#7fb3d3;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#5a9ab5;stop-opacity:1"/>
+    </linearGradient>
+    <linearGradient id="mountain2" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#9ecae1;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#74b4cf;stop-opacity:1"/>
+    </linearGradient>
+  </defs>
+
+  <!-- 배경 -->
+  <rect width="300" height="200" fill="url(#bg)" rx="4"/>
+
+  <!-- 하늘 구름 -->
+  <ellipse cx="60" cy="55" rx="28" ry="14" fill="white" opacity="0.7"/>
+  <ellipse cx="80" cy="48" rx="22" ry="12" fill="white" opacity="0.7"/>
+  <ellipse cx="40" cy="52" rx="18" ry="10" fill="white" opacity="0.7"/>
+
+  <ellipse cx="220" cy="42" rx="32" ry="15" fill="white" opacity="0.6"/>
+  <ellipse cx="245" cy="35" rx="24" ry="12" fill="white" opacity="0.6"/>
+  <ellipse cx="200" cy="38" rx="20" ry="10" fill="white" opacity="0.6"/>
+
+  <!-- 태양 -->
+  <circle cx="260" cy="38" r="18" fill="#ffd54f" opacity="0.85"/>
+  <circle cx="260" cy="38" r="13" fill="#ffca28"/>
+
+  <!-- 뒷산 -->
+  <polygon points="30,155 100,75 170,155" fill="url(#mountain2)" opacity="0.6"/>
+  <polygon points="110,155 195,65 280,155" fill="url(#mountain1)" opacity="0.7"/>
+
+  <!-- 앞산 눈 -->
+  <polygon points="140,90 195,65 250,90" fill="white" opacity="0.5"/>
+
+  <!-- 땅 -->
+  <rect x="0" y="150" width="300" height="50" fill="#a8d5a2" opacity="0.6"/>
+  <rect x="0" y="165" width="300" height="35" fill="#88c984" opacity="0.5"/>
+
+  <!-- 카메라 아이콘 -->
+  <rect x="125" y="118" width="50" height="38" rx="5" fill="#4a90d9" opacity="0.85"/>
+  <circle cx="150" cy="135" r="11" fill="white" opacity="0.9"/>
+  <circle cx="150" cy="135" r="7" fill="#4a90d9" opacity="0.9"/>
+  <rect x="160" y="122" width="9" height="6" rx="2" fill="white" opacity="0.8"/>
+
+  <!-- 텍스트 -->
+  <text x="150" y="190" text-anchor="middle" font-family="'Noto Sans KR', sans-serif"
+        font-size="11" fill="#5a7a9a" opacity="0.9" font-weight="500">이미지 준비 중</text>
+</svg>

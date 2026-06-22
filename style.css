@@ -1,0 +1,331 @@
+﻿:root {
+    --indigo: #4f46e5;
+    --indigo-hover: #4338ca;
+    --border: #e5e7eb;
+}
+
+body { font-family: 'Noto Sans KR', sans-serif; background-color: #f9fafb; }
+.text-indigo { color: var(--indigo); }
+.btn-indigo { background-color: var(--indigo); color: #fff; transition: 0.2s; }
+.btn-indigo:hover, .btn-indigo.active { background-color: var(--indigo-hover); color: #fff; }
+
+.navbar-brand span { color: var(--indigo); }
+.hero-minimal { height: 70vh; background: radial-gradient(circle at top right, #eef2ff, #ffffff); }
+
+.rounded-4 { border-radius: 1rem !important; }
+.border-dashed { border: 2px dashed var(--border); }
+
+.spot-card { transition: transform 0.3s; cursor: pointer; }
+.spot-card:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+
+.route-leg-card {
+    cursor: pointer;
+    transition: transform 0.16s ease, box-shadow 0.16s ease;
+}
+
+.route-leg-card:hover,
+.route-leg-card:focus-within {
+    transform: translateY(-1px);
+    box-shadow: 0 12px 20px rgba(15, 23, 42, 0.12) !important;
+}
+
+.saved-plan-card {
+    cursor: pointer;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.saved-plan-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 24px rgba(15, 23, 42, 0.12) !important;
+}
+
+.route-leg-toolbar {
+    gap: 0.5rem;
+}
+
+.modal-plan-item {
+    cursor: grab;
+    transition: transform 0.16s ease, box-shadow 0.16s ease;
+}
+
+.modal-plan-item:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 18px rgba(15, 23, 42, 0.1) !important;
+}
+
+.modal-plan-item:active {
+    cursor: grabbing;
+    opacity: 0.8;
+}
+
+.modal-plan-index {
+    min-width: 2rem;
+    text-align: center;
+    flex-shrink: 0;
+    background-color: var(--indigo) !important;
+    color: #fff !important;
+}
+
+.map-wrap {
+    width: 100%;
+}
+
+.map-route-info {
+    position: absolute;
+    left: 16px;
+    top: 16px;
+    z-index: 50;
+    padding: 0.55rem 0.75rem;
+    border-radius: 0.7rem;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    background: rgba(255, 255, 255, 0.96);
+    box-shadow: 0 10px 22px rgba(15, 23, 42, 0.12);
+    font-size: 0.9rem;
+    font-weight: 600;
+    line-height: 1.45;
+    color: #0f172a;
+    backdrop-filter: blur(3px);
+}
+
+.map-loading-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 60;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.62);
+    border-radius: 1rem;
+    backdrop-filter: blur(2px);
+}
+
+.map-loading-card {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.65rem 0.9rem;
+    border-radius: 999px;
+    border: 1px solid rgba(15, 23, 42, 0.1);
+    background: #ffffff;
+    color: #0f172a;
+    font-size: 0.9rem;
+    font-weight: 600;
+    box-shadow: 0 8px 18px rgba(15, 23, 42, 0.14);
+}
+
+.result-loading {
+    min-height: 96px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #334155;
+    font-weight: 600;
+    border-radius: 0.8rem;
+    background: linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
+}
+
+@media (max-width: 768px) {
+    .map-route-info {
+        left: 10px;
+        top: 10px;
+        right: 10px;
+        font-size: 0.84rem;
+    }
+}
+
+.plan-item { cursor: grab; }
+.plan-item:active { cursor: grabbing; opacity: 0.7; }
+
+.upload-zone {
+    position: relative;
+    border: 2px dashed #cbd5e1;
+    border-radius: 1rem;
+    padding: 2.5rem 1rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.24s ease;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+}
+
+.upload-zone:hover {
+    border-color: #4f46e5;
+    background: linear-gradient(135deg, #eef2ff 0%, #fafbff 100%);
+    box-shadow: 0 8px 16px rgba(79, 70, 229, 0.08);
+}
+
+.upload-zone.dragover {
+    border-color: #4f46e5;
+    background: #eef2ff;
+    transform: scale(1.02);
+    box-shadow: 0 12px 24px rgba(79, 70, 229, 0.15);
+}
+
+.upload-zone i {
+    color: #4f46e5;
+    transition: transform 0.24s ease;
+}
+
+.upload-zone:hover i,
+.upload-zone.dragover i {
+    transform: scale(1.1);
+}
+
+.upload-zone p { margin: 0.5rem 0 0; color: #1e293b; }
+
+.page { display: none; }
+.page.active { display: block; animation: fadeIn 0.4s ease-out; }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.toast-custom {
+    position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+    background: #1f2937; color: #fff; padding: 12px 28px; border-radius: 50px;
+    z-index: 10000; display: none; font-size: 0.9rem;
+}
+
+/* Plan page visual states */
+.lodging-status-card {
+    position: relative;
+    padding: 0.9rem 1rem 0.9rem 2.6rem;
+    border: 1px solid var(--border);
+    border-radius: 0.75rem;
+    background: #f8fafc;
+    line-height: 1.55;
+}
+
+.lodging-status-card::before {
+    position: absolute;
+    left: 0.95rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1.2rem;
+    height: 1.2rem;
+    border-radius: 999px;
+    content: "";
+}
+
+#lodgingInfo.lodging-status-card:not(:has(span.fw-bold)) {
+    color: #64748b;
+    border-style: dashed;
+    background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+}
+
+#lodgingInfo.lodging-status-card.is-pending {
+    color: #64748b;
+    border-style: dashed;
+    background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+}
+
+#lodgingInfo.lodging-status-card:not(:has(span.fw-bold))::before {
+    background: #94a3b8;
+    box-shadow: 0 0 0 4px rgba(148, 163, 184, 0.16);
+}
+
+#lodgingInfo.lodging-status-card.is-pending::before {
+    background: #94a3b8;
+    box-shadow: 0 0 0 4px rgba(148, 163, 184, 0.16);
+}
+
+#lodgingInfo.lodging-status-card:has(span.fw-bold) {
+    color: #1e293b;
+    border-color: rgba(79, 70, 229, 0.28);
+    background: linear-gradient(180deg, #eef2ff 0%, #ffffff 100%);
+    box-shadow: 0 8px 20px rgba(79, 70, 229, 0.08);
+}
+
+#lodgingInfo.lodging-status-card.is-confirmed {
+    color: #1e293b;
+    border-color: rgba(79, 70, 229, 0.28);
+    background: linear-gradient(180deg, #eef2ff 0%, #ffffff 100%);
+    box-shadow: 0 8px 20px rgba(79, 70, 229, 0.08);
+}
+
+#lodgingInfo.lodging-status-card:has(span.fw-bold)::before {
+    background: var(--indigo);
+    box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.15);
+}
+
+#lodgingInfo.lodging-status-card.is-confirmed::before {
+    background: var(--indigo);
+    box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.15);
+}
+
+.route-result-card {
+    border: 1px solid rgba(79, 70, 229, 0.16) !important;
+    background: linear-gradient(180deg, #ffffff 0%, #f8faff 100%);
+}
+
+.result-state-panel {
+    transition: opacity 0.24s ease, transform 0.24s ease;
+}
+
+.result-state-panel.d-none {
+    opacity: 0;
+    transform: translateY(4px);
+}
+
+.route-result-card:not(.d-none) {
+    animation: routeSwapIn 0.28s ease-out;
+}
+
+.route-result-card .badge.text-bg-primary {
+    background: var(--indigo) !important;
+    font-size: 0.86rem;
+    padding: 0.45rem 0.7rem;
+    border-radius: 999px;
+}
+
+.route-result-card .small.mb-3 {
+    padding: 0.65rem 0.8rem;
+    border-radius: 0.65rem;
+    border-left: 3px solid rgba(79, 70, 229, 0.45);
+    background: #eef2ff;
+}
+
+.route-result-card .table {
+    margin-bottom: 0;
+}
+
+.route-result-card .table thead th {
+    background: #eef2ff;
+    color: #312e81;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    border-bottom-width: 1px;
+}
+
+.route-result-card .table tbody tr:nth-child(odd) td {
+    background: #fafbff;
+}
+
+.route-result-card .table tbody td:first-child {
+    width: 52px;
+    font-weight: 700;
+    color: var(--indigo);
+}
+
+.route-result-card .table tbody td:last-child {
+    font-weight: 700;
+    color: #1e1b4b;
+}
+
+.page.page-transition {
+    will-change: opacity, transform, filter;
+}
+
+.page.page-transition.active {
+    animation: pageSlideIn 0.35s ease-out;
+}
+
+@keyframes pageSlideIn {
+    from { opacity: 0; transform: translateY(10px); filter: blur(2px); }
+    to { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+
+@keyframes routeSwapIn {
+    from { opacity: 0; transform: translateY(8px) scale(0.99); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
