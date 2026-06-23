@@ -72,3 +72,43 @@ INSERT IGNORE INTO sidos (sido_code, sido_name) VALUES
 (50, '제주'),
 (51, '강원'),
 (52, '전북');
+
+-- ─────────────────────────────────────────
+-- 그룹 여행
+-- ─────────────────────────────────────────
+CREATE TABLE IF NOT EXISTS group_trips (
+    id           BIGINT        NOT NULL AUTO_INCREMENT,
+    title        VARCHAR(200)  NOT NULL,
+    host_user_id VARCHAR(100)  NOT NULL,
+    description  TEXT              NULL,
+    created_at   DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    INDEX idx_group_host (host_user_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS group_members (
+    id          BIGINT        NOT NULL AUTO_INCREMENT,
+    group_id    BIGINT        NOT NULL,
+    user_id     VARCHAR(100)  NOT NULL,
+    user_name   VARCHAR(100)  NOT NULL,
+    joined_at   DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    UNIQUE KEY uk_group_user (group_id, user_id),
+    CONSTRAINT fk_member_group FOREIGN KEY (group_id) REFERENCES group_trips (id) ON DELETE CASCADE,
+    INDEX idx_member_user (user_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS group_places (
+    id            BIGINT        NOT NULL AUTO_INCREMENT,
+    group_id      BIGINT        NOT NULL,
+    content_id    VARCHAR(50)   NOT NULL,
+    title         VARCHAR(200)  NOT NULL,
+    lat           DOUBLE        NOT NULL,
+    lng           DOUBLE        NOT NULL,
+    added_by      VARCHAR(100)  NOT NULL,
+    added_by_name VARCHAR(100)  NOT NULL,
+    added_at      DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    CONSTRAINT fk_place_group FOREIGN KEY (group_id) REFERENCES group_trips (id) ON DELETE CASCADE,
+    INDEX idx_place_group (group_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

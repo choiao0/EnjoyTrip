@@ -53,6 +53,12 @@
             <version>0.4</version>
         </dependency>
 
+        <!-- WebSocket (STOMP 브로커) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
+        </dependency>
+
         <!-- Swagger UI (springdoc-openapi) -->
         <dependency>
             <groupId>org.springdoc</groupId>

@@ -15,6 +15,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.filter.CommonsRequestLoggingFilter;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -25,6 +26,17 @@ public class AppBeansConfig {
 
     @Autowired
     private AppProperties appProperties;
+
+    @Bean
+    public CommonsRequestLoggingFilter requestLoggingFilter() {
+        CommonsRequestLoggingFilter f = new CommonsRequestLoggingFilter();
+        f.setIncludeQueryString(true);
+        f.setIncludePayload(true);
+        f.setMaxPayloadLength(500);
+        f.setIncludeHeaders(false);
+        f.setAfterMessagePrefix("REQUEST: ");
+        return f;
+    }
 
     @Bean
     public ObjectMapper objectMapper() {
