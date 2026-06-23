@@ -65,34 +65,39 @@
 ## 프로젝트 구조
 
 ```
-.
-├── src/main/java/com/enjoytrip
-│   ├── controller      # REST API 컨트롤러
-│   ├── ai              # Spring AI 특화 모듈 구조(client/tool/resource/prompt/planner)
-│   ├── service         # 비즈니스 로직
-│   ├── repository      # DB / 파일 데이터 접근
-│   ├── model           # 도메인 모델
-│   ├── config          # CORS, 설정 빈
-│   └── util            # 유틸리티
-├── src/main/resources
-│   └── application.properties
-├── frontend
+EnjoyTrip/                          # 모노레포 루트
+├── backend/                        # Spring Boot REST API 서버
+│   ├── pom.xml
+│   ├── mvnw / mvnw.cmd
+│   ├── storage/                    # 런타임 데이터 (gitignore: uploads/*)
+│   │   ├── data/                   # JSON 영속 데이터
+│   │   └── uploads/                # 업로드 파일
+│   └── src/main/java/com/enjoytrip
+│       ├── controller      # REST API 컨트롤러
+│       ├── ai              # Spring AI 특화 모듈 (client/tool/resource/prompt/planner)
+│       ├── service         # 비즈니스 로직
+│       ├── repository      # DB / 파일 데이터 접근
+│       ├── model           # 도메인 모델
+│       ├── config          # CORS, 설정 빈
+│       └── util            # 유틸리티
+├── frontend/                       # Vue 3 SPA
 │   ├── index.html
 │   ├── vite.config.js
-│   └── src
-│       ├── api         # axios API 모듈
-│       ├── stores      # Pinia 스토어 (auth, toast)
-│       ├── router      # Vue Router 라우트 정의
-│       ├── views       # 페이지 컴포넌트
+│   └── src/
+│       ├── api/            # axios API 모듈
+│       ├── stores/         # Pinia 스토어 (auth, toast)
+│       ├── router/         # Vue Router 라우트 정의
+│       ├── views/          # 페이지 컴포넌트
 │       │   ├── HomeView.vue
 │       │   ├── AttractionsView.vue
 │       │   ├── PlansView.vue
 │       │   ├── HotplacesView.vue
-│       │   ├── auth/   # 로그인, 회원가입, 마이페이지, 비밀번호 찾기
-│       │   ├── board/  # 게시판 목록, 상세, 작성/수정
-│       │   └── notice/ # 공지사항 목록, 상세, 작성/수정
-│       └── components  # NavBar, AppToast
-└── pom.xml
+│       │   ├── auth/       # 로그인, 회원가입, 마이페이지, 비밀번호 찾기
+│       │   ├── board/      # 게시판 목록, 상세, 작성/수정
+│       │   └── notice/     # 공지사항 목록, 상세, 작성/수정
+│       └── components/     # NavBar, AppToast
+└── docs/
+    └── imgs/               # 문서용 이미지
 ```
 
 ---
@@ -108,7 +113,7 @@
 
 ### 1. application.properties 설정
 
-`src/main/resources/application.properties`에서 DB 정보와 API 키를 확인합니다.
+`backend/src/main/resources/application.properties`에서 DB 정보와 API 키를 확인합니다.
 
 ```properties
 spring.datasource.url=jdbc:mysql://localhost:3306/ssafy_trip?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
@@ -126,6 +131,7 @@ app.route.max-waypoints=8
 ### 2. 백엔드 실행
 
 ```bash
+cd backend
 ./mvnw spring-boot:run
 ```
 
