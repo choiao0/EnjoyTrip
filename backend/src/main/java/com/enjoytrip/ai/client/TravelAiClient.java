@@ -1,60 +1,55 @@
 package com.enjoytrip.ai.client;
 
 import com.enjoytrip.ai.resource.AiResource;
+import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestClient;
 
 import java.util.List;
 import java.util.Map;
 
 @Component
 public class TravelAiClient {
+
+    @Value("${gms.api.url}")
+    private String apiUrl;
+
+    @Value("${gms.api.key}")
+    private String apiKey;
+
+    @Value("${gms.model}")
+    private String model;
+
+    private RestClient restClient;
+
+    @PostConstruct
+    public void init() {
+        this.restClient = RestClient.create();
+    }
+
     public String generate(String prompt, List<AiResource> resources) {
-        StringBuilder answer = new StringBuilder();
-        answer.append("Tool 실행 결과를 바탕으로 정리한 여행 답변입니다.\n\n");
+        Map<String, Object> body = Map.of(
+                "model", model,
+                "messages", List.of(
+                        Map.of("role", "developer",
+                                "content", "당신은 한국 여행 추천 도우미입니다. 제공된 Tool 실행 결과(Resource)만 근거로 답변하고, 그 외 정보는 추측하지 마세요."),
+                        Map.of("role", "user", "content", prompt)
+                )
+        );
 
-        for (AiResource resource : resources) {
-            answer.append("- ").append(resource.getSummary()).append("\n");
-            if ("attractionSearchTool".equals(resource.getName())) {
-                appendAttractions(answer, resource);
-            }
-            if ("travelTipTool".equals(resource.getName())) {
-                appendTips(answer, resource);
-            }
-        }
+        Map<String, Object> response = restClient.post()
+                .uri(apiUrl)
+                .header("Authorization", "Bearer " + apiKey)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(body)
+                .retrieve()
+                .body(new ParameterizedTypeReference<>() {});
 
-        answer.append("\n서버가 Tool 호출 순서를 관리했으며, 위 응답은 Resource 결과만 사용했습니다.");
-        return answer.toString();
-    }
-
-    @SuppressWarnings("unchecked")
-    private void appendAttractions(StringBuilder answer, AiResource resource) {
-        Object items = resource.getData().get("items");
-        if (!(items instanceof List<?> list) || list.isEmpty()) {
-            return;
-        }
-
-        answer.append("  추천 후보: ");
-        list.stream().limit(3).forEach(item -> {
-            try {
-                Object title = item.getClass().getMethod("getTitle").invoke(item);
-                answer.append(title).append(", ");
-            } catch (ReflectiveOperationException ignored) {
-            }
-        });
-        int length = answer.length();
-        if (length >= 2 && answer.substring(length - 2).equals(", ")) {
-            answer.delete(length - 2, length);
-        }
-        answer.append("\n");
-    }
-
-    @SuppressWarnings("unchecked")
-    private void appendTips(StringBuilder answer, AiResource resource) {
-        Object tips = resource.getData().get("tips");
-        if (tips instanceof List<?> list) {
-            for (Object tip : list) {
-                answer.append("  · ").append(tip).append("\n");
-            }
-        }
+        List<Map<String, Object>> choices = (List<Map<String, Object>>) response.get("choices");
+        Map<String, Object> message = (Map<String, Object>) choices.get(0).get("message");
+        return (String) message.get("content");
     }
 }

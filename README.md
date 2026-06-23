@@ -14,6 +14,7 @@
 - jBCrypt (비밀번호 해시)
 - Jackson (JSON 직렬화)
 - springdoc-openapi 2.6 (Swagger UI)
+- GMS API — GPT-4o mini (OpenAI 호환 엔드포인트, `gms.model`로 모델 전환 가능)
 
 ### Frontend
 - Vue 3.4 (Composition API, `<script setup>`)
@@ -54,11 +55,11 @@
 - 공지사항 CRUD (관리자)
 - 핫플레이스 이미지 업로드 및 목록·삭제
 
-### 6. Spring AI 특화 모듈
+### 6. AI 여행 도우미
 - `client`, `tool`, `resource`, `prompt`, `planner` 역할을 분리한 AI 응답 구조
 - 기존 관광지 검색 서비스를 `attractionSearchTool` 단일 Tool로 호출
 - Planner가 요청 의도에 따라 관광지, 날씨, 여행 팁 Tool을 연쇄 호출
-- Tool 실행 결과(Resource)를 Prompt에 반영하고 서버 주도 응답 생성
+- Tool 실행 결과(Resource)를 Prompt에 반영하고 `TravelAiClient`가 GMS API(Claude Haiku)를 호출해 최종 답변 생성
 
 ---
 
@@ -121,6 +122,10 @@ spring.datasource.username=ssafy
 spring.datasource.password=ssafy
 
 kakao.mobility.rest.key=YOUR_KAKAO_MOBILITY_REST_KEY
+
+gms.api.url=https://gms.ssafy.io/gmsapi/api.openai.com/v1/chat/completions
+gms.api.key=YOUR_GMS_KEY
+gms.model=gpt-4o-mini
 
 app.storage.dir=./storage
 app.route.max-waypoints=8
@@ -210,7 +215,20 @@ npm run build
 ### Vue 3 SPA + Spring Boot REST 분리 구조
 기존 JSP 서버사이드 렌더링에서 REST API 백엔드 / Vue SPA 프론트엔드 구조로 전환했습니다. Vite 개발 서버 프록시로 CORS 없이 로컬 개발이 가능하며, 운영 시에는 Spring Boot CorsFilter로 허용 오리진을 제어합니다.
 
-### Spring AI 특화 모듈 설계
-PDF 요구사항의 필수 기능(F1201~F1205)에 맞춰 사용자 요청을 `AiTravelController`가 수신하고, `TravelPlanner`가 필요한 Tool 순서를 결정합니다. 각 Tool은 하나의 책임만 가지며 기존 Service 또는 로컬 Resource를 조회합니다. `TravelPromptBuilder`는 Tool 결과만 Prompt에 포함하고, `TravelAiClient`는 검증된 Resource 기반으로 최종 응답을 생성합니다.
+### AI 여행 도우미 설계
 
-심화 기능(F1206~F1209)은 Planner 구조와 README 고찰로 정리했습니다. 단일 Tool 호출은 빠르고 검증이 단순하지만 복합 질문 처리 범위가 좁고, 다중 Tool 호출은 관광지·날씨·팁처럼 서로 다른 Resource를 결합할 수 있는 대신 호출 순서와 실패 처리가 중요합니다. 향후 실제 Spring AI `ChatClient` 또는 별도 AI Server로 분리할 경우 현재 `TravelAiClient` 구현체만 교체하고 Tool/Planner 계층은 유지할 수 있습니다.
+사용자 요청을 `AiTravelController`가 수신하면 아래 순서로 처리합니다.
+
+```
+AiTravelController
+  → TravelPlanner       # 메시지 키워드로 실행할 Tool 목록 결정
+  → Tool × N 실행       # attractionSearchTool(DB), weatherTool, travelTipTool
+  → TravelPromptBuilder # Tool 결과(Resource)를 프롬프트 문자열로 조립
+  → TravelAiClient      # GMS API 호출 → Claude Haiku가 최종 답변 생성
+```
+
+각 Tool은 단일 책임을 가집니다. `attractionSearchTool`은 기존 `AttractionService`를 그대로 재사용하고, `weatherTool`과 `travelTipTool`은 로컬 데이터를 반환합니다. `TravelPromptBuilder`는 Tool 결과만 Prompt에 포함해 LLM이 주어진 Resource 밖을 추측하지 않도록 제약합니다.
+
+`TravelAiClient`는 GMS OpenAI 호환 엔드포인트(`/v1/chat/completions`)를 Spring `RestClient`로 호출합니다. 모델·URL·키는 `application.properties`로 외부화되어 있어 `gms.model` 값만 바꾸면 Claude / GPT / Gemini 간 전환이 가능합니다.
+
+단일 Tool 호출(`POST /api/ai/tools?name=`)은 빠르고 검증이 단순하며, 다중 Tool 호출(`POST /api/ai/chat`)은 관광지·날씨·팁을 결합한 복합 답변을 생성합니다.
