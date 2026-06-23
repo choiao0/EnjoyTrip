@@ -2,7 +2,10 @@
   <section class="py-5 container">
     <div class="d-flex justify-content-between align-items-center mb-4">
       <h2 class="fw-bold">여행 목록</h2>
-      <button class="btn btn-dark" @click="showModal = true">+ 새 여행 만들기</button>
+      <div class="d-flex gap-2">
+        <button class="btn btn-outline-secondary" @click="openJoinModal">그룹 참가하기</button>
+        <button class="btn btn-dark" @click="showModal = true">+ 새 여행 만들기</button>
+      </div>
     </div>
 
     <!-- 초안 배너 (PlansView 사용자를 위해 유지) -->
@@ -128,6 +131,29 @@
         </div>
       </div>
     </teleport>
+
+    <!-- 그룹 참가하기 모달 -->
+    <teleport to="body">
+      <div v-if="showJoinModal" class="modal-backdrop-custom" @click.self="showJoinModal = false">
+        <div class="card shadow p-4" style="width:380px;max-width:92vw;">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="fw-bold mb-0">그룹 참가하기</h5>
+            <button class="btn-close" @click="showJoinModal = false"></button>
+          </div>
+          <p class="text-muted small mb-3">그룹장에게 받은 6자리 초대 코드를 입력하세요.</p>
+          <input
+            v-model="joinCode"
+            class="form-control mb-3 text-center fw-bold fs-5 text-uppercase"
+            placeholder="예: AB12CD"
+            maxlength="6"
+            @keyup.enter="handleJoinByCode"
+          />
+          <button class="btn btn-indigo w-100" :disabled="joinCode.length < 6 || joiningByCode" @click="handleJoinByCode">
+            {{ joiningByCode ? '참가 중...' : '참가하기' }}
+          </button>
+        </div>
+      </div>
+    </teleport>
   </section>
 </template>
 
@@ -155,6 +181,10 @@ const modalMode = ref(null)
 const newGroupTitle = ref('')
 const newGroupDesc = ref('')
 const creatingGroup = ref(false)
+
+const showJoinModal = ref(false)
+const joinCode = ref('')
+const joiningByCode = ref(false)
 
 const allTrips = computed(() => [
   ...personalPlans.value.map(p => ({ ...p, _type: 'personal', _key: `p-${p.id}` })),
@@ -201,6 +231,33 @@ async function handleCreateGroup() {
     toastStore.show(e.response?.data?.error || '그룹 생성에 실패했습니다.', 'danger')
   } finally {
     creatingGroup.value = false
+  }
+}
+
+function openJoinModal() {
+  if (!authStore.user) {
+    toastStore.show('로그인이 필요합니다.', 'warning')
+    router.push('/auth/login')
+    return
+  }
+  showJoinModal.value = true
+}
+
+async function handleJoinByCode() {
+  const code = joinCode.value.trim().toUpperCase()
+  if (code.length < 6) return
+  joiningByCode.value = true
+  try {
+    const res = await groupTripApi.joinByCode(code)
+    const group = res.data.group
+    showJoinModal.value = false
+    joinCode.value = ''
+    toastStore.show(`'${group.title}' 그룹에 참가했습니다.`)
+    router.push(`/groups/${group.id}`)
+  } catch (e) {
+    toastStore.show(e.response?.data?.error || '참가에 실패했습니다.', 'danger')
+  } finally {
+    joiningByCode.value = false
   }
 }
 </script>

@@ -6,16 +6,26 @@ import com.enjoytrip.model.GroupTrip;
 import com.enjoytrip.repository.GroupTripRepository;
 import org.springframework.stereotype.Service;
 
+import java.security.SecureRandom;
 import java.util.List;
 import java.util.Map;
 
 @Service
 public class GroupTripService {
 
+    private static final String CODE_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    private static final SecureRandom RANDOM = new SecureRandom();
+
     private final GroupTripRepository repo;
 
     public GroupTripService(GroupTripRepository repo) {
         this.repo = repo;
+    }
+
+    private String generateInviteCode() {
+        StringBuilder sb = new StringBuilder(6);
+        for (int i = 0; i < 6; i++) sb.append(CODE_CHARS.charAt(RANDOM.nextInt(CODE_CHARS.length())));
+        return sb.toString();
     }
 
     public List<GroupTrip> findMyGroups(String userId) {
@@ -25,6 +35,11 @@ public class GroupTripService {
     public Map<String, Object> findDetail(Long groupId, String userId) {
         GroupTrip trip = repo.findById(groupId)
                 .orElseThrow(() -> new IllegalArgumentException("그룹을 찾을 수 없습니다."));
+        if (trip.getInviteCode() == null || trip.getInviteCode().isBlank()) {
+            String code = generateInviteCode();
+            repo.updateInviteCode(trip.getId(), code);
+            trip.setInviteCode(code);
+        }
         List<GroupMember> members = repo.findMembers(groupId);
         List<GroupPlace> places = repo.findPlaces(groupId);
         boolean isMember = repo.isMember(groupId, userId);
@@ -47,9 +62,20 @@ public class GroupTripService {
         trip.setHostUserId(userId);
         trip.setHostUserName(userName);
         trip.setDescription(description == null ? "" : description.trim());
+        trip.setInviteCode(generateInviteCode());
         repo.save(trip);
         repo.addMember(trip.getId(), userId, userName);
         return trip;
+    }
+
+    public Map<String, Object> joinByCode(String code, String userId, String userName) {
+        GroupTrip trip = repo.findByInviteCode(code)
+                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 초대 코드입니다."));
+        if (repo.isMember(trip.getId(), userId)) {
+            throw new IllegalArgumentException("이미 참가한 그룹입니다.");
+        }
+        GroupMember member = repo.addMember(trip.getId(), userId, userName);
+        return Map.of("group", trip, "member", member);
     }
 
     public void deleteGroup(Long groupId, String userId) {

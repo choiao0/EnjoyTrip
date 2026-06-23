@@ -66,10 +66,17 @@
           <!-- 초대 코드 -->
           <div class="card shadow-sm p-3 mb-3">
             <h6 class="fw-bold mb-2">그룹 초대</h6>
-            <p class="small text-muted mb-2">그룹 ID를 공유하면 다른 사람이 참가할 수 있습니다.</p>
-            <div class="input-group input-group-sm">
-              <input class="form-control" :value="groupId" readonly />
-              <button class="btn btn-outline-secondary" @click="copyLink">
+            <p class="small text-muted mb-1">초대 코드를 공유하면 누구나 참가할 수 있습니다.</p>
+            <div class="text-center py-2 mb-2 rounded-3 bg-light border">
+              <span class="fw-bold fs-4 letter-spacing-wide">
+                {{ store.currentGroup.inviteCode || '코드 없음' }}
+              </span>
+            </div>
+            <div class="d-flex gap-2">
+              <button class="btn btn-outline-secondary btn-sm flex-grow-1" @click="copyCode">
+                {{ codeCopied ? '복사됨!' : '코드 복사' }}
+              </button>
+              <button class="btn btn-outline-secondary btn-sm flex-grow-1" @click="copyLink">
                 {{ copied ? '복사됨!' : '링크 복사' }}
               </button>
             </div>
@@ -120,6 +127,7 @@ const toastStore = useToastStore()
 
 const loading = ref(true)
 const copied = ref(false)
+const codeCopied = ref(false)
 const mapEl = ref(null)
 let groupMap = null
 
@@ -171,6 +179,18 @@ function updateMapMarkers() {
     info.open(groupMap, marker)
   })
   groupMap.setBounds(bounds)
+}
+
+async function copyCode() {
+  const code = store.currentGroup?.inviteCode
+  if (!code) {
+    toastStore.show('초대 코드를 불러오는 중입니다. 잠시 후 다시 시도하세요.', 'warning')
+    return
+  }
+  await navigator.clipboard.writeText(code)
+  codeCopied.value = true
+  toastStore.show(`초대 코드 ${code} 복사됨!`)
+  setTimeout(() => { codeCopied.value = false }, 2000)
 }
 
 async function copyLink() {
@@ -228,3 +248,9 @@ async function handleDelete() {
   }
 }
 </script>
+
+<style scoped>
+.letter-spacing-wide {
+  letter-spacing: 0.35em;
+}
+</style>

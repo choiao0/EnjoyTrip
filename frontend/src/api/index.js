@@ -74,6 +74,7 @@ export const groupTripApi = {
   detail: (id) => api.get(`/api/groups/${id}`),
   delete: (id) => api.delete(`/api/groups/${id}`),
   join: (id) => api.post(`/api/groups/${id}/join`),
+  joinByCode: (code) => api.post('/api/groups/join-by-code', { code }),
   leave: (id) => api.post(`/api/groups/${id}/leave`),
   kickMember: (id, userId) => api.delete(`/api/groups/${id}/members/${userId}`),
   addPlace: (id, place) => api.post(`/api/groups/${id}/places`, place),

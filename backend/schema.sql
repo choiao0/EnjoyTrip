@@ -82,6 +82,7 @@ CREATE TABLE IF NOT EXISTS group_trips (
     host_user_id VARCHAR(100)  NOT NULL,
     description  TEXT              NULL,
     created_at   DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    invite_code  VARCHAR(6)        NULL UNIQUE COMMENT '6자리 영숫자 초대 코드',
     PRIMARY KEY (id),
     INDEX idx_group_host (host_user_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

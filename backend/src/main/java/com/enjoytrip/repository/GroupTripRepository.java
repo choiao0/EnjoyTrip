@@ -31,7 +31,7 @@ public class GroupTripRepository {
 
     public List<GroupTrip> findMyGroups(String userId) {
         String sql = """
-                SELECT g.id, g.title, g.host_user_id, g.description, g.created_at,
+                SELECT g.id, g.title, g.host_user_id, g.description, g.created_at, g.invite_code,
                        m2.user_name AS host_user_name
                 FROM group_trips g
                 JOIN group_members m  ON m.group_id = g.id AND m.user_id = ?
@@ -54,7 +54,7 @@ public class GroupTripRepository {
 
     public Optional<GroupTrip> findById(Long id) {
         String sql = """
-                SELECT g.id, g.title, g.host_user_id, g.description, g.created_at,
+                SELECT g.id, g.title, g.host_user_id, g.description, g.created_at, g.invite_code,
                        m.user_name AS host_user_name
                 FROM group_trips g
                 JOIN group_members m ON m.group_id = g.id AND m.user_id = g.host_user_id
@@ -74,13 +74,14 @@ public class GroupTripRepository {
     }
 
     public GroupTrip save(GroupTrip trip) {
-        String sql = "INSERT INTO group_trips (title, host_user_id, description, created_at) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO group_trips (title, host_user_id, description, created_at, invite_code) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = dataSource.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, trip.getTitle());
             ps.setString(2, trip.getHostUserId());
             ps.setString(3, trip.getDescription());
             ps.setTimestamp(4, Timestamp.valueOf(LocalDateTime.now()));
+            ps.setString(5, trip.getInviteCode());
             ps.executeUpdate();
             try (ResultSet keys = ps.getGeneratedKeys()) {
                 if (keys.next()) trip.setId(keys.getLong(1));
@@ -104,6 +105,41 @@ public class GroupTripRepository {
             log.error("그룹 삭제 실패 id={}: {}", groupId, e.getMessage(), e);
             throw new IllegalStateException("그룹 삭제 실패", e);
         }
+    }
+
+    public void updateInviteCode(Long groupId, String code) {
+        String sql = "UPDATE group_trips SET invite_code = ? WHERE id = ?";
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, code);
+            ps.setLong(2, groupId);
+            ps.executeUpdate();
+            log.info("초대코드 업데이트 groupId={} code={}", groupId, code);
+        } catch (SQLException e) {
+            log.error("초대코드 업데이트 실패 groupId={}: {}", groupId, e.getMessage(), e);
+            throw new IllegalStateException("초대코드 업데이트 실패", e);
+        }
+    }
+
+    public Optional<GroupTrip> findByInviteCode(String code) {
+        String sql = """
+                SELECT g.id, g.title, g.host_user_id, g.description, g.created_at, g.invite_code,
+                       m.user_name AS host_user_name
+                FROM group_trips g
+                JOIN group_members m ON m.group_id = g.id AND m.user_id = g.host_user_id
+                WHERE g.invite_code = ?
+                """;
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, code);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) return Optional.of(mapTrip(rs));
+            }
+        } catch (SQLException e) {
+            log.error("초대코드 조회 실패 code={}: {}", code, e.getMessage(), e);
+            throw new IllegalStateException("그룹 조회 실패", e);
+        }
+        return Optional.empty();
     }
 
     // ── Members ───────────────────────────────────────────────────
@@ -247,6 +283,7 @@ public class GroupTripRepository {
         t.setHostUserId(rs.getString("host_user_id"));
         t.setHostUserName(rs.getString("host_user_name"));
         t.setDescription(rs.getString("description"));
+        t.setInviteCode(rs.getString("invite_code"));
         Timestamp ts = rs.getTimestamp("created_at");
         t.setCreatedAt(ts != null ? ts.toLocalDateTime().format(FMT) : "");
         return t;
