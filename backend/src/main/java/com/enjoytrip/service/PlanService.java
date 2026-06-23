@@ -49,6 +49,29 @@ public class PlanService {
         return plan;
     }
 
+    public Plan addItem(String planId, String userId, String contentId, String title, double lat, double lng) {
+        Plan plan = findOwnedPlan(planId, userId);
+        boolean exists = plan.getItems().stream().anyMatch(i -> i.getContentId().equals(contentId));
+        if (exists) throw new IllegalArgumentException("이미 추가된 장소입니다.");
+        PlanItem item = new PlanItem();
+        item.setContentId(contentId);
+        item.setTitle(title);
+        item.setLat(lat);
+        item.setLng(lng);
+        plan.getItems().add(item);
+        plan.setUpdatedAt(DateTimeUtil.now());
+        planRepository.save(plan);
+        return plan;
+    }
+
+    public Plan updateLodging(String planId, String userId, Lodging lodging) {
+        Plan plan = findOwnedPlan(planId, userId);
+        plan.setLodging(lodging);
+        plan.setUpdatedAt(DateTimeUtil.now());
+        planRepository.save(plan);
+        return plan;
+    }
+
     public void delete(String planId, String userId) {
         findOwnedPlan(planId, userId);
         planRepository.delete(planId);

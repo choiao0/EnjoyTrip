@@ -4,7 +4,8 @@ import HomeView from '../views/HomeView.vue'
 const routes = [
   { path: '/', component: HomeView },
   { path: '/attractions', component: () => import('../views/AttractionsView.vue') },
-  { path: '/plans', component: () => import('../views/PlansView.vue') },
+  { path: '/trips', component: () => import('../views/TripListView.vue') },
+  { path: '/trips/:id', component: () => import('../views/TripDetailView.vue') },
   { path: '/ai', component: () => import('../views/AiTravelView.vue') },
   { path: '/hotplaces', component: () => import('../views/HotplacesView.vue') },
   { path: '/boards', component: () => import('../views/board/BoardListView.vue') },

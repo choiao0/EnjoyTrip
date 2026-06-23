@@ -32,8 +32,8 @@
         <div class="col-md-4">
           <div class="feature-card p-4 h-100">
             <h4 class="fw-bold mb-3">여행 계획 저장</h4>
-            <p class="text-muted mb-4">선택한 장소와 숙소를 기준으로 나만의 계획을 저장하고 추천 경로를 계산합니다.</p>
-            <router-link class="btn btn-outline-secondary" to="/plans">바로가기</router-link>
+            <p class="text-muted mb-4">개인 일정을 저장하거나 그룹 여행을 만들어 함께 장소를 추가하세요.</p>
+            <router-link class="btn btn-outline-secondary" to="/trips">바로가기</router-link>
           </div>
         </div>
         <div class="col-md-4">

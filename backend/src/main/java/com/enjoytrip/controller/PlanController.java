@@ -45,11 +45,47 @@ public class PlanController extends BaseController {
         String title = (String) body.get("title");
         String memo = (String) body.get("memo");
         Lodging lodging = buildLodging(body);
-        DraftPlan draft = draftPlan(session);
-        Plan plan = planService.save(currentUser(session).getId(), title, memo, lodging,
-                new ArrayList<>(draft.getItems()));
-        draft.getItems().clear();
+        List<PlanItem> items;
+        Object rawItems = body.get("items");
+        if (rawItems instanceof List<?> rawList) {
+            items = parseBodyItems(rawList);
+        } else {
+            DraftPlan draft = draftPlan(session);
+            items = new ArrayList<>(draft.getItems());
+            draft.getItems().clear();
+        }
+        Plan plan = planService.save(currentUser(session).getId(), title, memo, lodging, items);
         return ResponseEntity.status(HttpStatus.CREATED).body(plan);
+    }
+
+    @PatchMapping("/{id}/lodging")
+    public ResponseEntity<Plan> updateLodging(@PathVariable String id, @RequestBody Map<String, Object> body,
+                                              HttpSession session) {
+        if (!isLoggedIn(session)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        Object lat = body.get("lat");
+        Object lng = body.get("lng");
+        if (lat == null || lng == null) throw new IllegalArgumentException("숙소 좌표를 입력하세요.");
+        Lodging lodging = new Lodging();
+        lodging.setLat(((Number) lat).doubleValue());
+        lodging.setLng(((Number) lng).doubleValue());
+        lodging.setAddress((String) body.get("address"));
+        lodging.setPlaceName((String) body.get("placeName"));
+        Plan plan = planService.updateLodging(id, currentUser(session).getId(), lodging);
+        return ResponseEntity.ok(plan);
+    }
+
+    @PostMapping("/{id}/items")
+    public ResponseEntity<Plan> addItem(@PathVariable String id, @RequestBody Map<String, Object> body,
+                                        HttpSession session) {
+        if (!isLoggedIn(session)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        String contentId = (String) body.get("contentId");
+        String title = (String) body.get("title");
+        double lat = ((Number) body.get("lat")).doubleValue();
+        double lng = ((Number) body.get("lng")).doubleValue();
+        Plan plan = planService.addItem(id, currentUser(session).getId(), contentId, title, lat, lng);
+        return ResponseEntity.ok(plan);
     }
 
     @DeleteMapping("/{id}")
@@ -128,6 +164,22 @@ public class PlanController extends BaseController {
     public ResponseEntity<Void> clearDraft(HttpSession session) {
         draftPlan(session).getItems().clear();
         return ResponseEntity.ok().build();
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<PlanItem> parseBodyItems(List<?> rawList) {
+        List<PlanItem> items = new ArrayList<>();
+        for (Object o : rawList) {
+            if (!(o instanceof Map)) continue;
+            Map<String, Object> m = (Map<String, Object>) o;
+            PlanItem item = new PlanItem();
+            item.setContentId((String) m.get("contentId"));
+            item.setTitle((String) m.get("title"));
+            item.setLat(((Number) m.get("lat")).doubleValue());
+            item.setLng(((Number) m.get("lng")).doubleValue());
+            items.add(item);
+        }
+        return items;
     }
 
     @SuppressWarnings("unchecked")
