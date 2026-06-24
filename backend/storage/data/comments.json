@@ -1,0 +1,22 @@
+[ {
+  "id" : "630eaa82-9602-4921-8de7-3c481c8a3386",
+  "postId" : "e0881270-eeac-490b-a661-64c72524b793",
+  "authorId" : "123",
+  "authorName" : "123",
+  "content" : "??",
+  "createdAt" : "2026-06-24 16:00"
+}, {
+  "id" : "beb4c53c-62a9-445b-9a02-0e0ea60fcc85",
+  "postId" : "e0881270-eeac-490b-a661-64c72524b793",
+  "authorId" : "123",
+  "authorName" : "123",
+  "content" : "???",
+  "createdAt" : "2026-06-24 16:00"
+}, {
+  "id" : "f2c2bfa8-de37-40db-83c8-2c72d41bbe8e",
+  "postId" : "e0881270-eeac-490b-a661-64c72524b793",
+  "authorId" : "1234",
+  "authorName" : "1234",
+  "content" : "???''",
+  "createdAt" : "2026-06-24 16:01"
+} ]

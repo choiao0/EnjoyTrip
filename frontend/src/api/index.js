@@ -45,7 +45,10 @@ export const boardApi = {
   detail: (id) => api.get(`/api/boards/${id}`),
   create: (title, content) => api.post('/api/boards', { title, content }),
   update: (id, title, content) => api.put(`/api/boards/${id}`, { title, content }),
-  delete: (id) => api.delete(`/api/boards/${id}`)
+  delete: (id) => api.delete(`/api/boards/${id}`),
+  comments: (postId) => api.get(`/api/boards/${postId}/comments`),
+  addComment: (postId, content) => api.post(`/api/boards/${postId}/comments`, { content }),
+  deleteComment: (postId, commentId) => api.delete(`/api/boards/${postId}/comments/${commentId}`)
 }
 
 export const noticeApi = {
