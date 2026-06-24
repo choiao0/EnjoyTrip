@@ -41,6 +41,17 @@ public class HotplaceRepository extends AbstractJsonRepository<Hotplace> {
         writeAll(hotplaces);
     }
 
+    public void update(Hotplace target) {
+        List<Hotplace> hotplaces = readAll();
+        for (int i = 0; i < hotplaces.size(); i++) {
+            if (hotplaces.get(i).getId().equals(target.getId())) {
+                hotplaces.set(i, target);
+                break;
+            }
+        }
+        writeAll(hotplaces);
+    }
+
     public void delete(String id) {
         List<Hotplace> hotplaces = readAll();
         hotplaces.removeIf(hotplace -> hotplace.getId().equals(id));

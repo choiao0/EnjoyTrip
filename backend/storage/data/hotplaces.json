@@ -5,7 +5,7 @@
   "description" : "조선 왕조 최초의 궁궐. 광화문, 근정전, 경회루가 아름답다. 매월 마지막 수요일은 무료입장.",
   "address" : "서울 종로구 사직로 161",
   "lat" : 37.5796,
-  "lng" : 126.9770,
+  "lng" : 126.977,
   "imagePath" : "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Gyeongbok_1.jpg/800px-Gyeongbok_1.jpg",
   "createdAt" : "2026-06-01 10:00"
 }, {
@@ -42,9 +42,9 @@
   "id" : "sample-005",
   "userId" : "1234",
   "name" : "전주 한옥마을",
-  "description" : "700채 이상의 한옥이 모인 마을. 비빔밥·콩나물국밥·한과 등 전통 먹거리 천국.",
+  "description" : "콩나물국밥 무조건 먹어야 함. 500% 즐기기 위해 꼭 전날에 과음을 할 것!",
   "address" : "전북 전주시 완산구 기린대로 99",
-  "lat" : 35.8150,
+  "lat" : 35.815,
   "lng" : 127.1534,
   "imagePath" : "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Jeonju_Hanok_Village_01.jpg/800px-Jeonju_Hanok_Village_01.jpg",
   "createdAt" : "2026-06-15 09:30"

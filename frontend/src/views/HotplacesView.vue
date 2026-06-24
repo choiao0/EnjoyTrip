@@ -50,19 +50,53 @@
               </div>
               <div :class="hp.imagePath ? 'col-9' : 'col-12'">
                 <div class="card-body py-3">
-                  <div class="d-flex justify-content-between align-items-start">
-                    <div class="flex-grow-1 me-2">
-                      <h6 class="fw-bold mb-1">{{ hp.name }}</h6>
-                      <p v-if="hp.address" class="small text-muted mb-1">
-                        <i class="bi bi-geo-alt me-1"></i>{{ hp.address }}
-                      </p>
-                      <p v-if="hp.description" class="small text-muted mb-0">{{ hp.description }}</p>
+                  <!-- 일반 보기 -->
+                  <template v-if="editingId !== hp.id">
+                    <div class="d-flex justify-content-between align-items-start">
+                      <div class="flex-grow-1 me-2">
+                        <h6 class="fw-bold mb-1">{{ hp.name }}</h6>
+                        <p v-if="hp.address" class="small text-muted mb-1">
+                          <i class="bi bi-geo-alt me-1"></i>{{ hp.address }}
+                        </p>
+                        <p class="small text-muted mb-0">{{ hp.description || '메모 없음' }}</p>
+                      </div>
+                      <div class="d-flex gap-1 flex-shrink-0">
+                        <button
+                          class="btn btn-outline-secondary btn-sm py-0 px-2"
+                          @click.stop="startEdit(hp)"
+                        >✎</button>
+                        <button
+                          class="btn btn-outline-danger btn-sm py-0 px-2"
+                          @click.stop="deleteHotplace(hp.id)"
+                        >✕</button>
+                      </div>
                     </div>
-                    <button
-                      class="btn btn-outline-danger btn-sm py-0 px-2 flex-shrink-0"
-                      @click.stop="deleteHotplace(hp.id)"
-                    >✕</button>
-                  </div>
+                  </template>
+
+                  <!-- 수정 모드 -->
+                  <template v-else>
+                    <div @click.stop>
+                      <input
+                        v-model="editForm.name"
+                        class="form-control form-control-sm fw-bold mb-2"
+                        placeholder="장소명"
+                      />
+                      <textarea
+                        v-model="editForm.description"
+                        class="form-control form-control-sm mb-2"
+                        rows="3"
+                        placeholder="메모를 입력하세요."
+                      />
+                      <div class="d-flex gap-2">
+                        <button
+                          class="btn btn-indigo btn-sm flex-grow-1"
+                          :disabled="saving"
+                          @click="saveEdit(hp.id)"
+                        >{{ saving ? '저장 중...' : '저장' }}</button>
+                        <button class="btn btn-outline-secondary btn-sm" @click="cancelEdit">취소</button>
+                      </div>
+                    </div>
+                  </template>
                 </div>
               </div>
             </div>
@@ -158,6 +192,9 @@ const previewUrl = ref(null)
 const selectedFile = ref(null)
 const coordConfirmed = ref(false)
 const selectedId = ref(null)
+const editingId = ref(null)
+const editForm = ref({ name: '', description: '' })
+const saving = ref(false)
 
 const form = ref({ name: '', description: '', address: '', lat: null, lng: null })
 
@@ -315,6 +352,34 @@ async function submitHotplace() {
     toastStore.show(e.response?.data?.error || '저장 중 오류가 발생했습니다.', 'danger')
   } finally {
     submitting.value = false
+  }
+}
+
+function startEdit(hp) {
+  editingId.value = hp.id
+  editForm.value = { name: hp.name, description: hp.description || '' }
+}
+
+function cancelEdit() {
+  editingId.value = null
+  editForm.value = { name: '', description: '' }
+}
+
+async function saveEdit(id) {
+  saving.value = true
+  try {
+    const res = await hotplaceApi.update(id, {
+      name: editForm.value.name,
+      description: editForm.value.description
+    })
+    const idx = hotplaces.value.findIndex(h => h.id === id)
+    if (idx !== -1) hotplaces.value[idx] = res.data
+    cancelEdit()
+    toastStore.show('수정됐습니다.')
+  } catch (e) {
+    toastStore.show(e.response?.data?.error || '수정 중 오류가 발생했습니다.', 'danger')
+  } finally {
+    saving.value = false
   }
 }
 

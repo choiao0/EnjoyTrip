@@ -61,6 +61,7 @@ export const hotplaceApi = {
   create: (formData) => api.post('/api/hotplaces', formData, {
     headers: { 'Content-Type': 'multipart/form-data' }
   }),
+  update: (id, body) => api.patch(`/api/hotplaces/${id}`, body),
   delete: (id) => api.delete(`/api/hotplaces/${id}`)
 }
 

@@ -43,6 +43,16 @@ public class HotplaceController extends BaseController {
         return ResponseEntity.status(HttpStatus.CREATED).body(hotplace);
     }
 
+    @PatchMapping("/{id}")
+    public ResponseEntity<Hotplace> update(@PathVariable String id,
+                                            @RequestBody java.util.Map<String, String> body,
+                                            HttpSession session) {
+        if (!isLoggedIn(session)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        Hotplace updated = hotplaceService.update(
+                currentUser(session), id, body.get("name"), body.get("description"));
+        return ResponseEntity.ok(updated);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable String id, HttpSession session) {
         if (!isLoggedIn(session)) {

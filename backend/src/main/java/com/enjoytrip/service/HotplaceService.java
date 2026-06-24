@@ -62,6 +62,18 @@ public class HotplaceService {
         return hotplace;
     }
 
+    public Hotplace update(User user, String id, String name, String description) {
+        Hotplace hotplace = hotplaceRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("장소를 찾을 수 없습니다."));
+        if (!hotplace.getUserId().equals(user.getId())) {
+            throw new IllegalArgumentException("본인이 저장한 장소만 수정할 수 있습니다.");
+        }
+        if (name != null && !name.isBlank()) hotplace.setName(name.trim());
+        if (description != null) hotplace.setDescription(description.trim());
+        hotplaceRepository.update(hotplace);
+        return hotplace;
+    }
+
     public void delete(User user, String id) {
         Hotplace hotplace = hotplaceRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("장소를 찾을 수 없습니다."));
