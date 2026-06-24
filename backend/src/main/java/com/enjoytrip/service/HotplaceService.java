@@ -23,49 +23,67 @@ public class HotplaceService {
         this.uploadRoot = uploadRoot;
     }
 
-    public List<Hotplace> findAll() {
-        return hotplaceRepository.findAll();
+    public List<Hotplace> findByUser(String userId) {
+        return hotplaceRepository.findByUserId(userId);
     }
 
-    public Hotplace create(User user, String name, String description, MultipartFile imageFile) {
-        if (name == null || name.isBlank() || description == null || description.isBlank()) {
-            throw new IllegalArgumentException("장소명과 상세 설명을 모두 입력하세요.");
+    public Hotplace create(User user, String name, String description,
+                           String address, Double lat, Double lng,
+                           MultipartFile imageFile) {
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("장소명을 입력하세요.");
         }
-        if (imageFile == null || imageFile.isEmpty()) {
-            throw new IllegalArgumentException("이미지 파일을 선택하세요.");
-        }
-        try {
-            Files.createDirectories(uploadRoot);
-            String original = Path.of(imageFile.getOriginalFilename()).getFileName().toString();
-            String safeName = IdGenerator.nextId() + "_" + original.replaceAll("[^a-zA-Z0-9._-]", "_");
-            Path target = uploadRoot.resolve(safeName);
-            try (InputStream in = imageFile.getInputStream()) {
-                Files.copy(in, target, StandardCopyOption.REPLACE_EXISTING);
+        String savedImagePath = null;
+        if (imageFile != null && !imageFile.isEmpty()) {
+            try {
+                Files.createDirectories(uploadRoot);
+                String original = Path.of(imageFile.getOriginalFilename()).getFileName().toString();
+                String safeName = IdGenerator.nextId() + "_" + original.replaceAll("[^a-zA-Z0-9._-]", "_");
+                Path target = uploadRoot.resolve(safeName);
+                try (InputStream in = imageFile.getInputStream()) {
+                    Files.copy(in, target, StandardCopyOption.REPLACE_EXISTING);
+                }
+                savedImagePath = safeName;
+            } catch (IOException e) {
+                throw new IllegalStateException("이미지를 저장하지 못했습니다.", e);
             }
-            Hotplace hotplace = new Hotplace();
-            hotplace.setId(IdGenerator.nextId());
-            hotplace.setUserId(user.getId());
-            hotplace.setUserName(user.getName());
-            hotplace.setName(name.trim());
-            hotplace.setDescription(description.trim());
-            hotplace.setImagePath(safeName);
-            hotplace.setCreatedAt(DateTimeUtil.now());
-            hotplaceRepository.save(hotplace);
-            return hotplace;
-        } catch (IOException e) {
-            throw new IllegalStateException("이미지를 저장하지 못했습니다.", e);
         }
+        Hotplace hotplace = new Hotplace();
+        hotplace.setId(IdGenerator.nextId());
+        hotplace.setUserId(user.getId());
+        hotplace.setName(name.trim());
+        hotplace.setDescription(description == null ? "" : description.trim());
+        hotplace.setAddress(address == null ? "" : address.trim());
+        hotplace.setLat(lat);
+        hotplace.setLng(lng);
+        hotplace.setImagePath(savedImagePath);
+        hotplace.setCreatedAt(DateTimeUtil.now());
+        hotplaceRepository.save(hotplace);
+        return hotplace;
+    }
+
+    public Hotplace update(User user, String id, String name, String description) {
+        Hotplace hotplace = hotplaceRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("장소를 찾을 수 없습니다."));
+        if (!hotplace.getUserId().equals(user.getId())) {
+            throw new IllegalArgumentException("본인이 저장한 장소만 수정할 수 있습니다.");
+        }
+        if (name != null && !name.isBlank()) hotplace.setName(name.trim());
+        if (description != null) hotplace.setDescription(description.trim());
+        hotplaceRepository.update(hotplace);
+        return hotplace;
     }
 
     public void delete(User user, String id) {
         Hotplace hotplace = hotplaceRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("핫플레이스를 찾을 수 없습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("장소를 찾을 수 없습니다."));
         if (!hotplace.getUserId().equals(user.getId())) {
-            throw new IllegalArgumentException("본인이 등록한 핫플레이스만 삭제할 수 있습니다.");
+            throw new IllegalArgumentException("본인이 저장한 장소만 삭제할 수 있습니다.");
         }
-        try {
-            Files.deleteIfExists(uploadRoot.resolve(hotplace.getImagePath()));
-        } catch (IOException ignored) {
+        if (hotplace.getImagePath() != null) {
+            try {
+                Files.deleteIfExists(uploadRoot.resolve(hotplace.getImagePath()));
+            } catch (IOException ignored) {}
         }
         hotplaceRepository.delete(id);
     }

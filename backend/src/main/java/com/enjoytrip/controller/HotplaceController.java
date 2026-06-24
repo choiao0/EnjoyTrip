@@ -19,20 +19,38 @@ public class HotplaceController extends BaseController {
     private HotplaceService hotplaceService;
 
     @GetMapping
-    public List<Hotplace> list() {
-        return hotplaceService.findAll();
-    }
-
-    @PostMapping
-    public ResponseEntity<Hotplace> create(@RequestParam String name,
-                                            @RequestParam String description,
-                                            @RequestParam("image") MultipartFile imageFile,
-                                            HttpSession session) {
+    public ResponseEntity<List<Hotplace>> list(HttpSession session) {
         if (!isLoggedIn(session)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        Hotplace hotplace = hotplaceService.create(currentUser(session), name, description, imageFile);
+        return ResponseEntity.ok(hotplaceService.findByUser(currentUser(session).getId()));
+    }
+
+    @PostMapping
+    public ResponseEntity<Hotplace> create(
+            @RequestParam String name,
+            @RequestParam(required = false) String description,
+            @RequestParam(required = false) String address,
+            @RequestParam(required = false) Double lat,
+            @RequestParam(required = false) Double lng,
+            @RequestParam(value = "image", required = false) MultipartFile imageFile,
+            HttpSession session) {
+        if (!isLoggedIn(session)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        Hotplace hotplace = hotplaceService.create(
+                currentUser(session), name, description, address, lat, lng, imageFile);
         return ResponseEntity.status(HttpStatus.CREATED).body(hotplace);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<Hotplace> update(@PathVariable String id,
+                                            @RequestBody java.util.Map<String, String> body,
+                                            HttpSession session) {
+        if (!isLoggedIn(session)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        Hotplace updated = hotplaceService.update(
+                currentUser(session), id, body.get("name"), body.get("description"));
+        return ResponseEntity.ok(updated);
     }
 
     @DeleteMapping("/{id}")
