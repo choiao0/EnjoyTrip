@@ -2,7 +2,7 @@
   <section class="py-5 container">
     <div class="d-flex justify-content-between align-items-center mb-4">
       <div>
-        <h2 class="fw-bold mb-0">나의 장소</h2>
+        <h2 class="fw-bold mb-0">핫플레이스</h2>
         <p class="text-muted small mb-0">나만 볼 수 있는 개인 장소 저장소입니다.</p>
       </div>
     </div>
@@ -41,7 +41,7 @@
             <div class="row g-0">
               <div v-if="hp.imagePath" class="col-3">
                 <img
-                  :src="`/uploads/${hp.imagePath}`"
+                  :src="hp.imagePath.startsWith('http') ? hp.imagePath : `/uploads/${hp.imagePath}`"
                   :alt="hp.name"
                   class="w-100 h-100"
                   style="object-fit:cover;min-height:100px;"
@@ -140,7 +140,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, nextTick } from 'vue'
+import { ref, onMounted, nextTick, watch } from 'vue'
 import { hotplaceApi } from '../api/index.js'
 import { useAuthStore } from '../stores/auth.js'
 import { useToastStore } from '../stores/toast.js'
@@ -164,10 +164,22 @@ const form = ref({ name: '', description: '', address: '', lat: null, lng: null 
 let map = null
 const markers = []
 
-onMounted(async () => {
+async function setup() {
   await nextTick()
   initMap()
-  if (authStore.user) await loadHotplaces()
+  await loadHotplaces()
+}
+
+onMounted(() => {
+  // fetchMe()가 이미 완료된 경우 즉시 실행
+  if (authStore.user) {
+    setup()
+  }
+})
+
+// fetchMe()가 나중에 완료될 경우 (비동기 auth 복원)
+watch(() => authStore.user, (user) => {
+  if (user && !map) setup()
 })
 
 function initMap() {

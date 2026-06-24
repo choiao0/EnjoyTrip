@@ -20,7 +20,7 @@
             <div class="vr mx-1 opacity-25"></div>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" active-class="active fw-bold" to="/hotplaces">나의 장소</router-link>
+            <router-link class="nav-link" active-class="active fw-bold" to="/hotplaces">핫플레이스</router-link>
           </li>
           <li class="nav-item">
             <router-link class="nav-link" active-class="active fw-bold" to="/boards">여행정보공유</router-link>

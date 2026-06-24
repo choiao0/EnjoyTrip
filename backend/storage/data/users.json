@@ -7,6 +7,14 @@
   "updatedAt" : "2026-06-24 13:59",
   "admin" : true
 }, {
+  "id" : "admin",
+  "name" : "admin",
+  "pwHash" : "$2a$10$1n.pRAcIc3UIw.HvaIaW6epAkxKbCFOsiXZe3f/I.d2GcmXR4roOi",
+  "role" : "ADMIN",
+  "createdAt" : "2026-06-24 15:07",
+  "updatedAt" : "2026-06-24 15:07",
+  "admin" : true
+}, {
   "id" : "1234",
   "name" : "1234",
   "pwHash" : "$2a$10$c5f/PlScFb7/Azr9cx9ELut./XxZZxwwxAYOe7dDmRWGa8wZMaYva",

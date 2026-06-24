@@ -1,9 +1,61 @@
 [ {
+  "id" : "sample-001",
+  "userId" : "1234",
+  "name" : "경복궁",
+  "description" : "조선 왕조 최초의 궁궐. 광화문, 근정전, 경회루가 아름답다. 매월 마지막 수요일은 무료입장.",
+  "address" : "서울 종로구 사직로 161",
+  "lat" : 37.5796,
+  "lng" : 126.9770,
+  "imagePath" : "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Gyeongbok_1.jpg/800px-Gyeongbok_1.jpg",
+  "createdAt" : "2026-06-01 10:00"
+}, {
+  "id" : "sample-002",
+  "userId" : "1234",
+  "name" : "해운대 해수욕장",
+  "description" : "부산 최고의 해변. 여름 성수기에는 매우 붐비니 아침 일찍 가는 걸 추천.",
+  "address" : "부산 해운대구 해운대해변로 264",
+  "lat" : 35.1587,
+  "lng" : 129.1604,
+  "imagePath" : "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Haeundae_Beach%2C_Busan%2C_Korea.jpg/800px-Haeundae_Beach%2C_Busan%2C_Korea.jpg",
+  "createdAt" : "2026-06-05 14:30"
+}, {
+  "id" : "sample-003",
+  "userId" : "1234",
+  "name" : "성산일출봉",
+  "description" : "제주도 동쪽 끝 유네스코 세계자연유산. 일출이 압권이니 새벽 5시에 도착 목표로.",
+  "address" : "제주 서귀포시 성산읍 일출로 284-12",
+  "lat" : 33.4581,
+  "lng" : 126.9425,
+  "imagePath" : "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Seongsanilchulbong03.jpg/800px-Seongsanilchulbong03.jpg",
+  "createdAt" : "2026-06-10 08:15"
+}, {
+  "id" : "sample-004",
+  "userId" : "1234",
+  "name" : "남이섬",
+  "description" : "겨울연가 촬영지. 사계절 모두 아름답고 메타세쿼이아 길이 유명하다.",
+  "address" : "강원 춘천시 남산면 남이섬길 1",
+  "lat" : 37.7943,
+  "lng" : 127.5251,
+  "imagePath" : "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Nami_Island_-_panoramio.jpg/800px-Nami_Island_-_panoramio.jpg",
+  "createdAt" : "2026-06-12 11:00"
+}, {
+  "id" : "sample-005",
+  "userId" : "1234",
+  "name" : "전주 한옥마을",
+  "description" : "700채 이상의 한옥이 모인 마을. 비빔밥·콩나물국밥·한과 등 전통 먹거리 천국.",
+  "address" : "전북 전주시 완산구 기린대로 99",
+  "lat" : 35.8150,
+  "lng" : 127.1534,
+  "imagePath" : "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Jeonju_Hanok_Village_01.jpg/800px-Jeonju_Hanok_Village_01.jpg",
+  "createdAt" : "2026-06-15 09:30"
+}, {
   "id" : "e9df87e1-5d96-468b-a2a2-4c95845b6aaf",
   "userId" : "123",
-  "userName" : "123",
   "name" : "밤티",
   "description" : "밤티",
+  "address" : "",
+  "lat" : null,
+  "lng" : null,
   "imagePath" : "c13ffd95-088f-4643-95b3-63ef48211ae1______2026-01-29_092645.png",
   "createdAt" : "2026-05-14 12:01"
 } ]
