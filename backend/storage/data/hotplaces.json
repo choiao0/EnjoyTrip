@@ -6,7 +6,7 @@
   "address" : "서울 종로구 사직로 161",
   "lat" : 37.5796,
   "lng" : 126.977,
-  "imagePath" : "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Gyeongbok_1.jpg/800px-Gyeongbok_1.jpg",
+  "imagePath" : "https://picsum.photos/seed/gyeongbokgung/400/300",
   "createdAt" : "2026-06-01 10:00"
 }, {
   "id" : "sample-002",
@@ -16,7 +16,7 @@
   "address" : "부산 해운대구 해운대해변로 264",
   "lat" : 35.1587,
   "lng" : 129.1604,
-  "imagePath" : "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Haeundae_Beach%2C_Busan%2C_Korea.jpg/800px-Haeundae_Beach%2C_Busan%2C_Korea.jpg",
+  "imagePath" : "https://picsum.photos/seed/haeundae/400/300",
   "createdAt" : "2026-06-05 14:30"
 }, {
   "id" : "sample-003",
@@ -26,7 +26,7 @@
   "address" : "제주 서귀포시 성산읍 일출로 284-12",
   "lat" : 33.4581,
   "lng" : 126.9425,
-  "imagePath" : "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Seongsanilchulbong03.jpg/800px-Seongsanilchulbong03.jpg",
+  "imagePath" : "https://picsum.photos/seed/seongsan/400/300",
   "createdAt" : "2026-06-10 08:15"
 }, {
   "id" : "sample-004",
@@ -36,7 +36,7 @@
   "address" : "강원 춘천시 남산면 남이섬길 1",
   "lat" : 37.7943,
   "lng" : 127.5251,
-  "imagePath" : "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1d/Nami_Island_-_panoramio.jpg/800px-Nami_Island_-_panoramio.jpg",
+  "imagePath" : "https://picsum.photos/seed/namiseom/400/300",
   "createdAt" : "2026-06-12 11:00"
 }, {
   "id" : "sample-005",
@@ -46,7 +46,7 @@
   "address" : "전북 전주시 완산구 기린대로 99",
   "lat" : 35.815,
   "lng" : 127.1534,
-  "imagePath" : "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Jeonju_Hanok_Village_01.jpg/800px-Jeonju_Hanok_Village_01.jpg",
+  "imagePath" : "https://picsum.photos/seed/jeonju/400/300",
   "createdAt" : "2026-06-15 09:30"
 }, {
   "id" : "e9df87e1-5d96-468b-a2a2-4c95845b6aaf",
