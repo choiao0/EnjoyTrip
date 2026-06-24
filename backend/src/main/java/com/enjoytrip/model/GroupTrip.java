@@ -7,6 +7,7 @@ public class GroupTrip {
     private String hostUserName;
     private String description;
     private String createdAt;
+    private String inviteCode;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -25,4 +26,7 @@ public class GroupTrip {
 
     public String getCreatedAt() { return createdAt; }
     public void setCreatedAt(String createdAt) { this.createdAt = createdAt; }
+
+    public String getInviteCode() { return inviteCode; }
+    public void setInviteCode(String inviteCode) { this.inviteCode = inviteCode; }
 }

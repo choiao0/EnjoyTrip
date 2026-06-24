@@ -47,6 +47,20 @@ public class GroupTripController extends BaseController {
         return ResponseEntity.status(HttpStatus.CREATED).body(trip);
     }
 
+    @PostMapping("/join-by-code")
+    public ResponseEntity<Map<String, Object>> joinByCode(@RequestBody Map<String, String> body, HttpSession session) {
+        if (!isLoggedIn(session)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        User user = currentUser(session);
+        String code = body.get("code");
+        if (code == null || code.isBlank()) throw new IllegalArgumentException("초대 코드를 입력하세요.");
+        Map<String, Object> result = groupTripService.joinByCode(code.trim().toUpperCase(), user.getId(), user.getName());
+        GroupTrip trip = (GroupTrip) result.get("group");
+        GroupMember member = (GroupMember) result.get("member");
+        messaging.convertAndSend("/topic/group/" + trip.getId(),
+                Map.of("type", "MEMBER_JOINED", "actorId", user.getId(), "data", member));
+        return ResponseEntity.status(HttpStatus.CREATED).body(result);
+    }
+
     // ── 그룹 상세 / 삭제 ───────────────────────────────────────────
 
     @GetMapping("/{id}")
