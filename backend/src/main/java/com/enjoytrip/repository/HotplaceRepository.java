@@ -22,6 +22,13 @@ public class HotplaceRepository extends AbstractJsonRepository<Hotplace> {
                 .collect(Collectors.toList());
     }
 
+    public List<Hotplace> findByUserId(String userId) {
+        return readAll().stream()
+                .filter(h -> userId.equals(h.getUserId()))
+                .sorted(Comparator.comparing(Hotplace::getCreatedAt).reversed())
+                .collect(Collectors.toList());
+    }
+
     public Optional<Hotplace> findById(String id) {
         return readAll().stream()
                 .filter(hotplace -> hotplace.getId().equals(id))
