@@ -30,4 +30,44 @@
   "createdAt" : "2026-06-24 14:01",
   "updatedAt" : "2026-06-24 14:01",
   "admin" : false
+}, {
+  "id" : "traveler1",
+  "name" : "김지수",
+  "pwHash" : "$2a$10$igIMPNaQ3KD.uvxUA1OP2.OnGIEPOSAeztZvHwXIjTIMT5sLK0ST6",
+  "role" : "USER",
+  "createdAt" : "2026-06-24 16:59",
+  "updatedAt" : "2026-06-24 16:59",
+  "admin" : false
+}, {
+  "id" : "traveler2",
+  "name" : "박민준",
+  "pwHash" : "$2a$10$i6M6.R8X/MbPtmVk6aY02eHlg0c1hD6llAMrT98kVPvZa8lrXZARe",
+  "role" : "USER",
+  "createdAt" : "2026-06-24 16:59",
+  "updatedAt" : "2026-06-24 16:59",
+  "admin" : false
+}, {
+  "id" : "traveler3",
+  "name" : "이서연",
+  "pwHash" : "$2a$10$B2p6IomJboq3qzY6jJNhuetFfB9CLkI3UQYTnQxKFfbToMhKbPx9y",
+  "role" : "USER",
+  "createdAt" : "2026-06-24 16:59",
+  "updatedAt" : "2026-06-24 16:59",
+  "admin" : false
+}, {
+  "id" : "traveler4",
+  "name" : "최현우",
+  "pwHash" : "$2a$10$XpkQb6xuCoj8sjUYnZxm6.UKsh4aPeZ1iODwpzekGnvML8R5v3ydm",
+  "role" : "USER",
+  "createdAt" : "2026-06-24 16:59",
+  "updatedAt" : "2026-06-24 16:59",
+  "admin" : false
+}, {
+  "id" : "traveler5",
+  "name" : "정다은",
+  "pwHash" : "$2a$10$vCcvMjNZoOq3elMqTJk68.2WWqqyoBfhe4qoLVk8t3VYr92TddkZK",
+  "role" : "USER",
+  "createdAt" : "2026-06-24 16:59",
+  "updatedAt" : "2026-06-24 16:59",
+  "admin" : false
 } ]

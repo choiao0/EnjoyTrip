@@ -1,11 +1,13 @@
 package com.enjoytrip.config;
 
 import com.enjoytrip.repository.BoardRepository;
+import com.enjoytrip.repository.CommentRepository;
 import com.enjoytrip.repository.HotplaceRepository;
 import com.enjoytrip.repository.NoticeRepository;
 import com.enjoytrip.repository.PlanRepository;
 import com.enjoytrip.repository.UserRepository;
 import com.enjoytrip.service.BoardService;
+import com.enjoytrip.service.CommentService;
 import com.enjoytrip.service.HotplaceService;
 import com.enjoytrip.service.NoticeService;
 import com.enjoytrip.service.PlanService;
@@ -90,6 +92,16 @@ public class AppBeansConfig {
     @Bean
     public HotplaceService hotplaceService(HotplaceRepository hotplaceRepository, Path storageRoot) {
         return new HotplaceService(hotplaceRepository, storageRoot.resolve("uploads").resolve("hotplaces"));
+    }
+
+    @Bean
+    public CommentRepository commentRepository(ObjectMapper objectMapper, Path storageRoot) {
+        return new CommentRepository(storageRoot.resolve("data").resolve("comments.json"), objectMapper);
+    }
+
+    @Bean
+    public CommentService commentService(CommentRepository commentRepository) {
+        return new CommentService(commentRepository);
     }
 
     @Bean

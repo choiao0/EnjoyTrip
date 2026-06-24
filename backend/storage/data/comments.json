@@ -1,0 +1,85 @@
+[ {
+  "id" : "comment-001",
+  "postId" : "board-001",
+  "authorId" : "traveler2",
+  "authorName" : "박민준",
+  "content" : "오 저도 렌터카 없이 가려고 고민 중이었는데 정말 유용한 정보네요! 우도 자전거 오전에 가야 한다는 팁 꼭 기억할게요 :)",
+  "createdAt" : "2026-06-20 10:22"
+}, {
+  "id" : "comment-002",
+  "postId" : "board-001",
+  "authorId" : "traveler4",
+  "authorName" : "최현우",
+  "content" : "한라산 어리목 코스 왕복 4시간이면 체력 많이 필요한가요? 평소에 등산 잘 안 하는데 도전해볼 수 있을지 걱정되네요.",
+  "createdAt" : "2026-06-20 13:45"
+}, {
+  "id" : "comment-003",
+  "postId" : "board-001",
+  "authorId" : "traveler1",
+  "authorName" : "김지수",
+  "content" : "어리목 코스는 완만한 편이라 운동화 신고도 괜찮아요! 단 꼭 아이젠 챙기세요 (날씨 따라 다름). 좋은 후기 감사합니다~",
+  "createdAt" : "2026-06-21 09:10"
+}, {
+  "id" : "comment-004",
+  "postId" : "board-002",
+  "authorId" : "traveler3",
+  "authorName" : "이서연",
+  "content" : "깡통시장 비빔당면 진짜 맛있죠ㅠㅠ 저는 거기서 꼭 씨앗호떡도 같이 먹는데 강추합니다!",
+  "createdAt" : "2026-06-21 15:20"
+}, {
+  "id" : "comment-005",
+  "postId" : "board-002",
+  "authorId" : "traveler5",
+  "authorName" : "정다은",
+  "content" : "당일치기 코스 완벽하네요. 광안리 야경까지 보고 막차 타는 루트 저도 참고할게요!",
+  "createdAt" : "2026-06-22 08:33"
+}, {
+  "id" : "comment-006",
+  "postId" : "board-002",
+  "authorId" : "traveler2",
+  "authorName" : "박민준",
+  "content" : "감천문화마을은 오르막길이 꽤 있어서 편한 운동화 신고 가세요. 고양이들도 많아서 힐링됩니다 ㅎㅎ",
+  "createdAt" : "2026-06-22 11:05"
+}, {
+  "id" : "comment-007",
+  "postId" : "board-003",
+  "authorId" : "traveler5",
+  "authorName" : "정다은",
+  "content" : "동궁과 월지 야간 입장은 보통 오후 9시까지예요! 벚꽃 시즌엔 더 늦게까지 운영하는 경우도 있으니 미리 확인해보세요.",
+  "createdAt" : "2026-06-22 12:15"
+}, {
+  "id" : "comment-008",
+  "postId" : "board-003",
+  "authorId" : "traveler1",
+  "authorName" : "김지수",
+  "content" : "경주 한옥 게스트하우스 '라궁' 추천드려요! 황리단길 걸어서 5분 거리고 조식도 줘요 :)",
+  "createdAt" : "2026-06-23 17:40"
+}, {
+  "id" : "comment-009",
+  "postId" : "board-004",
+  "authorId" : "traveler3",
+  "authorName" : "이서연",
+  "content" : "테라로사 강릉본점 분위기도 정말 좋죠! 창고 개조한 인테리어가 인상적이었어요. 다음엔 보헤미안도 가봐야겠다.",
+  "createdAt" : "2026-06-23 18:00"
+}, {
+  "id" : "comment-010",
+  "postId" : "board-004",
+  "authorId" : "traveler2",
+  "authorName" : "박민준",
+  "content" : "강릉에 커피 박물관도 있는데 같이 들르면 더 좋아요. 드립 체험도 할 수 있어요!",
+  "createdAt" : "2026-06-24 09:15"
+}, {
+  "id" : "comment-011",
+  "postId" : "board-005",
+  "authorId" : "traveler4",
+  "authorName" : "최현우",
+  "content" : "남부시장 야시장 완전 꿀팁이다!! 저번에 평일에 갔다가 문 닫혀서 속상했는데 주말에만 열리는 거였군요ㅠ",
+  "createdAt" : "2026-06-24 11:30"
+}, {
+  "id" : "comment-012",
+  "postId" : "board-005",
+  "authorId" : "traveler1",
+  "authorName" : "김지수",
+  "content" : "전주 막걸리 중에 모주도 꼭 드세요! 계피향 나는 달콤한 막걸리인데 전주 특산품이에요 :)",
+  "createdAt" : "2026-06-24 14:20"
+} ]
