@@ -76,4 +76,19 @@ public class AuthController extends BaseController {
         String message = userService.findPasswordMessage(body.get("id"), body.get("name"));
         return ResponseEntity.ok(Map.of("message", message));
     }
+
+    /** 관리자 전용: 특정 유저의 role 변경 (ADMIN ↔ USER) */
+    @PatchMapping("/users/{userId}/role")
+    public ResponseEntity<Map<String, String>> changeRole(@PathVariable String userId,
+                                                           @RequestBody Map<String, String> body,
+                                                           HttpSession session) {
+        if (!isLoggedIn(session)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        if (!currentUser(session).isAdmin()) return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        String newRole = body.get("role");
+        if (!"ADMIN".equals(newRole) && !"USER".equals(newRole)) {
+            return ResponseEntity.badRequest().body(Map.of("error", "role은 ADMIN 또는 USER만 가능합니다."));
+        }
+        userService.changeRole(userId, newRole);
+        return ResponseEntity.ok(Map.of("message", userId + "의 role이 " + newRole + "로 변경됐습니다."));
+    }
 }

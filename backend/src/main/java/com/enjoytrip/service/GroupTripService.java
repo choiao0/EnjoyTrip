@@ -121,6 +121,11 @@ public class GroupTripService {
         if (!repo.isMember(groupId, userId)) {
             throw new IllegalArgumentException("그룹 멤버만 장소를 추가할 수 있습니다.");
         }
+        boolean alreadyAdded = repo.findPlaces(groupId).stream()
+                .anyMatch(p -> p.getContentId() != null && p.getContentId().equals(place.getContentId()));
+        if (alreadyAdded) {
+            throw new IllegalArgumentException("이미 추가된 장소입니다.");
+        }
         place.setAddedBy(userId);
         place.setAddedByName(userName);
         return repo.addPlace(groupId, place);

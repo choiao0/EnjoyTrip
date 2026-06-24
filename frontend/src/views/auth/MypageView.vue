@@ -30,6 +30,28 @@
           </div>
         </div>
       </div>
+      <!-- 관리자 패널 -->
+      <div v-if="authStore.user?.role === 'ADMIN'" class="col-12">
+        <div class="card border-0 shadow-sm rounded-4 border-start border-4 border-warning">
+          <div class="card-body p-4">
+            <h4 class="fw-bold mb-1">관리자 패널</h4>
+            <p class="text-muted small mb-3">유저 ID를 입력해 관리자 권한을 부여하거나 회수합니다.</p>
+            <div class="d-flex gap-2 align-items-end flex-wrap">
+              <div class="flex-grow-1">
+                <label class="form-label small fw-semibold">유저 ID</label>
+                <input v-model="adminTargetId" class="form-control" placeholder="예: user123">
+              </div>
+              <button class="btn btn-warning" :disabled="!adminTargetId.trim() || changingRole" @click="promoteToAdmin">
+                {{ changingRole ? '처리 중...' : '관리자로 승격' }}
+              </button>
+              <button class="btn btn-outline-secondary" :disabled="!adminTargetId.trim() || changingRole" @click="demoteToUser">
+                {{ changingRole ? '처리 중...' : '일반 유저로 변경' }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="col-lg-5">
         <div class="card border-0 shadow-sm rounded-4">
           <div class="card-body p-4">
@@ -62,6 +84,8 @@ const toastStore = useToastStore()
 const saving = ref(false)
 const deleting = ref(false)
 const deletePassword = ref('')
+const adminTargetId = ref('')
+const changingRole = ref(false)
 
 const profileForm = ref({ name: '', currentPassword: '', newPassword: '' })
 
@@ -90,6 +114,24 @@ async function updateProfile() {
     saving.value = false
   }
 }
+
+async function changeRole(role) {
+  const id = adminTargetId.value.trim()
+  if (!id) return
+  changingRole.value = true
+  try {
+    const res = await authApi.changeRole(id, role)
+    toastStore.show(res.data.message)
+    adminTargetId.value = ''
+  } catch (e) {
+    toastStore.show(e.response?.data?.error || '처리 중 오류가 발생했습니다.', 'danger')
+  } finally {
+    changingRole.value = false
+  }
+}
+
+function promoteToAdmin() { changeRole('ADMIN') }
+function demoteToUser() { changeRole('USER') }
 
 async function deleteAccount() {
   if (!confirm('정말로 탈퇴하시겠습니까?')) return

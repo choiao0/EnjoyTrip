@@ -1,6 +1,6 @@
 <template>
   <section class="py-5 container">
-    <router-link to="/trips" class="text-muted small">← 여행 목록</router-link>
+    <router-link to="/trips" class="btn btn-sm btn-outline-secondary mb-3">← 여행 목록</router-link>
 
     <div v-if="loading" class="text-center py-5">
       <div class="spinner-border" role="status"></div>
@@ -18,19 +18,42 @@
       <div class="row g-4">
         <div class="col-lg-7">
           <div class="card shadow-sm p-3 mb-3">
-            <h6 class="fw-bold mb-2">장소 목록 ({{ plan.items?.length ?? 0 }}개{{ plan.lodging ? ' + 숙소' : '' }})</h6>
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <div class="d-flex align-items-center gap-2">
+                <h6 class="fw-bold mb-0">장소 목록 ({{ plan.items?.length ?? 0 }}개{{ plan.lodging ? ' + 숙소' : '' }})</h6>
+                <span v-if="savingItems" class="small text-muted">저장 중...</span>
+                <span v-else-if="lastSaved" class="small text-success fw-semibold">✓ 저장됨</span>
+              </div>
+              <router-link
+                :to="{ path: '/attractions', query: { planId: plan.id, tripTitle: plan.title } }"
+                class="btn btn-sm btn-outline-secondary"
+              >+ 관광지 추가</router-link>
+            </div>
             <div v-if="!plan.items?.length && !plan.lodging" class="text-muted text-center py-3 small">
-              장소가 없습니다. <router-link to="/attractions">관광정보 검색</router-link>에서 추가하세요.
+              아직 추가된 장소가 없습니다.
+              <router-link :to="{ path: '/attractions', query: { planId: plan.id, tripTitle: plan.title } }">관광지 추가</router-link>에서 장소를 추가하세요.
             </div>
             <div v-else class="d-flex flex-column gap-2">
               <div
                 v-for="(item, idx) in plan.items"
-                :key="idx"
-                class="d-flex align-items-center gap-2 border rounded-3 p-2"
+                :key="item.contentId"
+                :class="['d-flex align-items-center gap-2 border rounded-3 p-2 drag-item',
+                         dragOverIdx === idx && dragStartIdx !== idx ? 'drag-over' : '']"
+                draggable="true"
+                @dragstart="onDragStart($event, idx)"
+                @dragover="onDragOver($event, idx)"
+                @drop="onDrop($event, idx)"
+                @dragend="onDragEnd"
               >
-                <span class="badge text-bg-primary">{{ idx + 1 }}</span>
-                <span class="fw-semibold">{{ item.title }}</span>
+                <span class="drag-handle text-muted flex-shrink-0">⠿</span>
+                <span class="badge text-bg-primary flex-shrink-0">{{ idx + 1 }}</span>
+                <span class="fw-semibold flex-grow-1">{{ item.title }}</span>
+                <button
+                  class="btn btn-outline-danger btn-sm py-0 px-2 flex-shrink-0"
+                  @click.stop="deleteItem(idx)"
+                >✕</button>
               </div>
+              <p v-if="plan.items?.length" class="text-muted small mt-1 mb-1">⠿ 드래그로 순서 변경 · ✕ 로 삭제</p>
               <div
                 v-if="plan.lodging"
                 class="d-flex align-items-center gap-2 border rounded-3 p-2 bg-light"
@@ -180,6 +203,11 @@ const routeResult = ref(null)
 const recommending = ref(false)
 let planMap = null
 
+const savingItems = ref(false)
+const lastSaved = ref(false)
+const dragStartIdx = ref(null)
+const dragOverIdx = ref(null)
+
 const lodgingName = ref('')
 const lodgingAddress = ref('')
 const lodgingLat = ref(0)
@@ -320,6 +348,55 @@ async function saveLodging() {
   }
 }
 
+function onDragStart(e, idx) {
+  dragStartIdx.value = idx
+  e.dataTransfer.effectAllowed = 'move'
+}
+
+function onDragOver(e, idx) {
+  e.preventDefault()
+  dragOverIdx.value = idx
+}
+
+function onDrop(e, idx) {
+  e.preventDefault()
+  if (dragStartIdx.value === null || dragStartIdx.value === idx) { onDragEnd(); return }
+  const items = [...plan.value.items]
+  const [moved] = items.splice(dragStartIdx.value, 1)
+  items.splice(idx, 0, moved)
+  plan.value = { ...plan.value, items }
+  onDragEnd()
+  saveItems()
+}
+
+function onDragEnd() {
+  dragStartIdx.value = null
+  dragOverIdx.value = null
+}
+
+async function deleteItem(idx) {
+  const items = plan.value.items.filter((_, i) => i !== idx)
+  plan.value = { ...plan.value, items }
+  await saveItems()
+}
+
+async function saveItems() {
+  savingItems.value = true
+  lastSaved.value = false
+  try {
+    const res = await planApi.reorderItems(plan.value.id, plan.value.items)
+    plan.value = res.data
+    lastSaved.value = true
+    setTimeout(() => { lastSaved.value = false }, 2000)
+    await nextTick()
+    drawOnMap(plan.value)
+  } catch (e) {
+    toastStore.show(e.response?.data?.error || '저장에 실패했습니다.', 'danger')
+  } finally {
+    savingItems.value = false
+  }
+}
+
 async function deletePlan() {
   if (!confirm('계획을 삭제하시겠습니까?')) return
   try {
@@ -331,3 +408,20 @@ async function deletePlan() {
   }
 }
 </script>
+
+<style scoped>
+.drag-handle {
+  cursor: grab;
+  font-size: 1.1rem;
+  line-height: 1;
+  user-select: none;
+}
+.drag-item {
+  transition: background-color 0.1s;
+}
+.drag-item.drag-over {
+  border-color: #0d6efd !important;
+  border-width: 2px !important;
+  background-color: #f0f5ff;
+}
+</style>

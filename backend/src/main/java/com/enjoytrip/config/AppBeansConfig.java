@@ -38,6 +38,7 @@ public class AppBeansConfig {
         return f;
     }
 
+    /** Spring MVC HTTP 응답용: @JsonProperty(access=WRITE_ONLY) 적용 */
     @Bean
     public ObjectMapper objectMapper() {
         return JsonUtil.objectMapper();
@@ -52,28 +53,28 @@ public class AppBeansConfig {
     }
 
     @Bean
-    public UserRepository userRepository(ObjectMapper objectMapper, Path storageRoot) {
-        return new UserRepository(storageRoot.resolve("data").resolve("users.json"), objectMapper);
+    public UserRepository userRepository(Path storageRoot) {
+        return new UserRepository(storageRoot.resolve("data").resolve("users.json"), JsonUtil.fileObjectMapper());
     }
 
     @Bean
-    public PlanRepository planRepository(ObjectMapper objectMapper, Path storageRoot) {
-        return new PlanRepository(storageRoot.resolve("data").resolve("plans.json"), objectMapper);
+    public PlanRepository planRepository(Path storageRoot) {
+        return new PlanRepository(storageRoot.resolve("data").resolve("plans.json"), JsonUtil.fileObjectMapper());
     }
 
     @Bean
-    public HotplaceRepository hotplaceRepository(ObjectMapper objectMapper, Path storageRoot) {
-        return new HotplaceRepository(storageRoot.resolve("data").resolve("hotplaces.json"), objectMapper);
+    public HotplaceRepository hotplaceRepository(Path storageRoot) {
+        return new HotplaceRepository(storageRoot.resolve("data").resolve("hotplaces.json"), JsonUtil.fileObjectMapper());
     }
 
     @Bean
-    public BoardRepository boardRepository(ObjectMapper objectMapper, Path storageRoot) {
-        return new BoardRepository(storageRoot.resolve("data").resolve("boards.json"), objectMapper);
+    public BoardRepository boardRepository(Path storageRoot) {
+        return new BoardRepository(storageRoot.resolve("data").resolve("boards.json"), JsonUtil.fileObjectMapper());
     }
 
     @Bean
-    public NoticeRepository noticeRepository(ObjectMapper objectMapper, Path storageRoot) {
-        return new NoticeRepository(storageRoot.resolve("data").resolve("notices.json"), objectMapper);
+    public NoticeRepository noticeRepository(Path storageRoot) {
+        return new NoticeRepository(storageRoot.resolve("data").resolve("notices.json"), JsonUtil.fileObjectMapper());
     }
 
     @Bean

@@ -39,6 +39,11 @@ onMounted(async () => {
     router.push('/auth/login')
     return
   }
+  if (authStore.user.role !== 'ADMIN') {
+    toastStore.show('관리자만 공지사항을 작성할 수 있습니다.', 'warning')
+    router.push('/notices')
+    return
+  }
   if (isEdit.value) {
     const res = await noticeApi.detail(route.params.id)
     form.value = { title: res.data.title, content: res.data.content }

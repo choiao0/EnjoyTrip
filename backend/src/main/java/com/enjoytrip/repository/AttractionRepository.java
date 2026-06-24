@@ -40,8 +40,10 @@ public class AttractionRepository {
             params.add(contentTypeId);
         }
         if (keyword != null && !keyword.isBlank()) {
-            sql.append(" AND a.title LIKE ?");
-            params.add("%" + keyword.trim() + "%");
+            sql.append(" AND (a.title LIKE ? OR a.addr1 LIKE ?)");
+            String kw = "%" + keyword.trim() + "%";
+            params.add(kw);
+            params.add(kw);
         }
         sql.append(" LIMIT 20");
         

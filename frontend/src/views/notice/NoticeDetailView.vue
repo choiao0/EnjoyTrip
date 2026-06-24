@@ -7,7 +7,7 @@
         <div class="content-pre">{{ notice.content }}</div>
         <div class="d-flex gap-2 mt-4">
           <router-link class="btn btn-outline-secondary" to="/notices">목록</router-link>
-          <template v-if="authStore.user?.id === notice.authorId">
+          <template v-if="authStore.user?.role === 'ADMIN'">
             <router-link :to="`/notices/${notice.id}/edit`" class="btn btn-outline-dark">수정</router-link>
             <button class="btn btn-outline-danger" @click="deleteNotice">삭제</button>
           </template>

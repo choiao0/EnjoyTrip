@@ -30,7 +30,8 @@
           </li>
           <template v-if="authStore.user">
             <li class="nav-item">
-              <router-link class="btn btn-sm btn-outline-secondary" to="/auth/mypage">
+              <router-link class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-1" to="/auth/mypage">
+                <span v-if="authStore.user.role === 'ADMIN'" class="badge bg-warning text-dark" style="font-size:0.6rem;">관리자</span>
                 {{ authStore.user.name }}
               </router-link>
             </li>
