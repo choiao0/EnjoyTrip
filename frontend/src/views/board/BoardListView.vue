@@ -2,8 +2,8 @@
   <section class="py-5 container">
     <div class="d-flex justify-content-between align-items-center mb-4">
       <div>
-        <h2 class="fw-bold mb-0">여행정보공유</h2>
-        <p class="text-muted small mb-0">총 {{ posts.length }}개의 게시글</p>
+        <h2 class="fw-bold mb-1">여행정보공유</h2>
+        <p class="text-muted mb-0">총 {{ posts.length }}개의 게시글</p>
       </div>
       <router-link v-if="authStore.user" class="btn btn-indigo" to="/boards/new">글쓰기</router-link>
     </div>

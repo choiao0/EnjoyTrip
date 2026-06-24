@@ -2,8 +2,8 @@
   <section class="py-5 container">
     <div class="d-flex justify-content-between align-items-center mb-4">
       <div>
-        <h2 class="fw-bold mb-0">핫플레이스</h2>
-        <p class="text-muted small mb-0">나만 볼 수 있는 개인 장소 저장소입니다.</p>
+        <h2 class="fw-bold mb-1">핫플레이스</h2>
+        <p class="text-muted mb-0">나만 볼 수 있는 개인 장소 저장소입니다.</p>
       </div>
     </div>
 
