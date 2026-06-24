@@ -89,6 +89,12 @@
     </div>
   </section>
 
+  <AddToTripModal
+    :show="showAddModal"
+    :attraction="selected"
+    @close="showAddModal = false"
+  />
+
   <!-- 관광지 상세 모달 -->
   <div class="modal fade" id="attractionModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
@@ -112,7 +118,7 @@
         </div>
         <div class="modal-footer border-0 pt-0">
           <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">닫기</button>
-          <button type="button" class="btn btn-indigo btn-sm px-4" @click="addToDraft">
+          <button type="button" class="btn btn-indigo btn-sm px-4" @click="openAddModal">
             <i class="bi bi-plus-lg me-1"></i>계획에 추가
           </button>
         </div>
@@ -124,8 +130,9 @@
 <script setup>
 import { ref, onMounted, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
-import { attractionApi, planApi } from '../api/index.js'
+import { attractionApi } from '../api/index.js'
 import { useToastStore } from '../stores/toast.js'
+import AddToTripModal from '../components/AddToTripModal.vue'
 
 const route = useRoute()
 const toastStore = useToastStore()
@@ -139,6 +146,7 @@ const loading = ref(false)
 const sidosLoading = ref(false)
 const sidosError = ref('')
 const selected = ref(null)
+const showAddModal = ref(false)
 let mapInstance = null
 let modalInstance = null
 
@@ -240,19 +248,8 @@ function openModal(item) {
   modalInstance.show()
 }
 
-async function addToDraft() {
-  if (!selected.value) return
-  try {
-    const res = await planApi.addDraftItem({
-      contentId: String(selected.value.contentId),
-      title: selected.value.title,
-      lat: selected.value.lat,
-      lng: selected.value.lng
-    })
-    modalInstance.hide()
-    toastStore.show(res.data.message, res.data.ok ? 'success' : 'warning')
-  } catch {
-    toastStore.show('오류가 발생했습니다.', 'danger')
-  }
+function openAddModal() {
+  modalInstance?.hide()
+  showAddModal.value = true
 }
 </script>

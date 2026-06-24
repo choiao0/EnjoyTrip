@@ -8,25 +8,25 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto gap-2 align-items-lg-center">
           <li class="nav-item">
-            <router-link class="nav-link" active-class="active fw-bold" to="/attractions">지역별 관광정보</router-link>
+            <router-link class="nav-link" active-class="active fw-bold" to="/attractions">관광정보 검색</router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" active-class="active fw-bold" to="/plans">나의 여행계획</router-link>
+            <router-link class="nav-link" active-class="active fw-bold" to="/trips">여행 목록</router-link>
           </li>
           <li class="nav-item">
             <router-link class="nav-link" active-class="active fw-bold" to="/ai">AI 여행도우미</router-link>
           </li>
-          <li class="nav-item">
-            <router-link class="nav-link" active-class="active fw-bold" to="/groups">그룹여행</router-link>
+          <li class="nav-item d-none d-lg-flex align-items-center">
+            <div class="vr mx-1 opacity-25"></div>
           </li>
           <li class="nav-item">
             <router-link class="nav-link" active-class="active fw-bold" to="/hotplaces">핫플레이스</router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" active-class="active fw-bold" to="/notices">공지사항</router-link>
+            <router-link class="nav-link" active-class="active fw-bold" to="/boards">여행정보공유</router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" active-class="active fw-bold" to="/boards">여행정보공유</router-link>
+            <router-link class="nav-link" active-class="active fw-bold" to="/notices">공지사항</router-link>
           </li>
           <template v-if="authStore.user">
             <li class="nav-item">

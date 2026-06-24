@@ -1,0 +1,218 @@
+<template>
+  <section class="py-5 container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2 class="fw-bold">여행 목록</h2>
+      <button class="btn btn-dark" @click="showModal = true">+ 새 여행 만들기</button>
+    </div>
+
+    <!-- 초안 배너 (PlansView 사용자를 위해 유지) -->
+    <div
+      v-if="draft.length > 0"
+      class="alert border-start border-4 border-primary bg-light d-flex justify-content-between align-items-center mb-4"
+      style="cursor:pointer;"
+      @click="router.push('/attractions')"
+    >
+      <div>
+        <span class="fw-semibold">담아둔 장소가 있습니다</span>
+        <span class="text-muted ms-2 small">{{ draft.length }}개 — 관광정보 검색에서 계속 추가하세요</span>
+      </div>
+      <span class="fw-semibold">관광정보 검색 →</span>
+    </div>
+
+    <!-- 탭 -->
+    <ul class="nav nav-tabs mb-4">
+      <li class="nav-item">
+        <button :class="['nav-link', tab === 'all' ? 'active' : '']" @click="tab = 'all'">
+          전체 ({{ allTrips.length }})
+        </button>
+      </li>
+      <li class="nav-item">
+        <button :class="['nav-link', tab === 'personal' ? 'active' : '']" @click="tab = 'personal'">
+          개인 ({{ personalPlans.length }})
+        </button>
+      </li>
+      <li class="nav-item">
+        <button :class="['nav-link', tab === 'group' ? 'active' : '']" @click="tab = 'group'">
+          그룹 ({{ groups.length }})
+        </button>
+      </li>
+    </ul>
+
+    <div v-if="loading" class="text-center py-5">
+      <div class="spinner-border" role="status"></div>
+    </div>
+    <div v-else-if="!authStore.user" class="text-center text-muted py-5">
+      <p>여행 목록을 보려면 <router-link to="/auth/login">로그인</router-link>이 필요합니다.</p>
+    </div>
+    <div v-else-if="filteredTrips.length === 0" class="text-center text-muted py-5">
+      여행이 없습니다. 새 여행을 만들어보세요.
+    </div>
+    <div v-else class="row g-3">
+      <div v-for="item in filteredTrips" :key="item._key" class="col-md-6 col-lg-4">
+        <!-- 개인 여행 카드 -->
+        <div
+          v-if="item._type === 'personal'"
+          class="card h-100 shadow-sm"
+          style="cursor:pointer;"
+          @click="router.push(`/trips/${item.id}`)"
+        >
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <h5 class="card-title fw-bold mb-0">{{ item.title }}</h5>
+              <span class="badge bg-primary">개인</span>
+            </div>
+            <p class="card-text text-muted small mb-2">{{ item.memo || '메모 없음' }}</p>
+            <p class="card-text small text-muted mb-1">{{ item.createdAt }}</p>
+            <span class="badge bg-light text-dark border">장소 {{ item.items?.length ?? 0 }}개</span>
+          </div>
+        </div>
+        <!-- 그룹 여행 카드 -->
+        <div
+          v-else
+          class="card h-100 shadow-sm"
+          style="cursor:pointer;"
+          @click="router.push(`/groups/${item.id}`)"
+        >
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <h5 class="card-title fw-bold mb-0">{{ item.title }}</h5>
+              <span class="badge bg-success">그룹</span>
+            </div>
+            <p class="card-text text-muted small mb-2">{{ item.description || '설명 없음' }}</p>
+            <p class="card-text small text-muted mb-1">{{ item.createdAt }}</p>
+            <span class="badge bg-light text-dark border">그룹장: {{ item.hostUserName }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 새 여행 만들기 모달 -->
+    <teleport to="body">
+      <div v-if="showModal" class="modal-backdrop-custom" @click.self="closeModal">
+        <div class="card shadow p-4" style="width:420px;max-width:92vw;">
+          <h5 class="fw-bold mb-3">새 여행 만들기</h5>
+
+          <div v-if="!modalMode" class="d-grid gap-2">
+            <button class="btn btn-outline-primary py-3 text-start" @click="modalMode = 'personal'">
+              <div class="fw-semibold">개인 여행</div>
+              <div class="small text-muted">나만의 장소를 골라 일정을 저장합니다</div>
+            </button>
+            <button class="btn btn-outline-success py-3 text-start" @click="modalMode = 'group'">
+              <div class="fw-semibold">그룹 여행</div>
+              <div class="small text-muted">여러 명이 함께 장소를 추가합니다</div>
+            </button>
+          </div>
+
+          <div v-else-if="modalMode === 'personal'">
+            <p class="text-muted small mb-3">관광정보 검색에서 장소를 담고 계획을 저장합니다.</p>
+            <div class="d-flex gap-2">
+              <button class="btn btn-indigo flex-grow-1" @click="router.push('/trips/new'); closeModal()">바로 시작</button>
+              <button class="btn btn-outline-secondary" @click="modalMode = null">뒤로</button>
+            </div>
+          </div>
+
+          <div v-else-if="modalMode === 'group'">
+            <div class="mb-3">
+              <input v-model="newGroupTitle" class="form-control mb-2" placeholder="그룹 이름 *" />
+              <textarea v-model="newGroupDesc" class="form-control" rows="2" placeholder="설명 (선택)" />
+            </div>
+            <div class="d-flex gap-2">
+              <button class="btn btn-indigo flex-grow-1" :disabled="creatingGroup" @click="handleCreateGroup">
+                {{ creatingGroup ? '생성 중...' : '그룹 만들기' }}
+              </button>
+              <button class="btn btn-outline-secondary" @click="modalMode = null">뒤로</button>
+            </div>
+          </div>
+
+          <button class="btn btn-sm btn-outline-secondary mt-3 w-100" @click="closeModal">취소</button>
+        </div>
+      </div>
+    </teleport>
+  </section>
+</template>
+
+<script setup>
+import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { planApi, groupTripApi } from '../api/index.js'
+import { useAuthStore } from '../stores/auth.js'
+import { useGroupTripStore } from '../stores/groupTrip.js'
+import { useToastStore } from '../stores/toast.js'
+
+const router = useRouter()
+const authStore = useAuthStore()
+const groupStore = useGroupTripStore()
+const toastStore = useToastStore()
+
+const loading = ref(true)
+const tab = ref('all')
+const personalPlans = ref([])
+const groups = ref([])
+const draft = ref([])
+
+const showModal = ref(false)
+const modalMode = ref(null)
+const newGroupTitle = ref('')
+const newGroupDesc = ref('')
+const creatingGroup = ref(false)
+
+const allTrips = computed(() => [
+  ...personalPlans.value.map(p => ({ ...p, _type: 'personal', _key: `p-${p.id}` })),
+  ...groups.value.map(g => ({ ...g, _type: 'group', _key: `g-${g.id}` }))
+])
+
+const filteredTrips = computed(() => {
+  if (tab.value === 'personal') return allTrips.value.filter(t => t._type === 'personal')
+  if (tab.value === 'group') return allTrips.value.filter(t => t._type === 'group')
+  return allTrips.value
+})
+
+onMounted(async () => {
+  if (!authStore.user) { loading.value = false; return }
+  const [plansRes, groupsRes, draftRes] = await Promise.allSettled([
+    planApi.list(),
+    groupTripApi.list(),
+    planApi.getDraft()
+  ])
+  if (plansRes.status === 'fulfilled') personalPlans.value = plansRes.value.data
+  if (groupsRes.status === 'fulfilled') groups.value = groupsRes.value.data
+  if (draftRes.status === 'fulfilled') draft.value = draftRes.value.data?.items || []
+  loading.value = false
+})
+
+function closeModal() {
+  showModal.value = false
+  modalMode.value = null
+  newGroupTitle.value = ''
+  newGroupDesc.value = ''
+}
+
+async function handleCreateGroup() {
+  if (!newGroupTitle.value.trim()) {
+    toastStore.show('그룹 이름을 입력하세요.', 'warning')
+    return
+  }
+  creatingGroup.value = true
+  try {
+    const group = await groupStore.createGroup(newGroupTitle.value, newGroupDesc.value)
+    closeModal()
+    router.push(`/groups/${group.id}`)
+  } catch (e) {
+    toastStore.show(e.response?.data?.error || '그룹 생성에 실패했습니다.', 'danger')
+  } finally {
+    creatingGroup.value = false
+  }
+}
+</script>
+
+<style scoped>
+.modal-backdrop-custom {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
+}
+</style>
