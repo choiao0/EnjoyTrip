@@ -4,7 +4,7 @@
     <div class="d-flex justify-content-between align-items-end mb-4">
       <div>
         <h2 class="fw-bold mb-1">공지사항</h2>
-        <p class="text-muted small mb-0">EnjoyTrip의 주요 공지를 확인하세요.</p>
+        <p class="text-muted mb-0">EnjoyTrip의 주요 공지를 확인하세요.</p>
       </div>
       <router-link v-if="authStore.user?.role === 'ADMIN'" class="btn btn-indigo btn-sm" to="/notices/new">
         + 공지 작성
