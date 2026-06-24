@@ -15,7 +15,8 @@ export const authApi = {
   updateProfile: (name, currentPassword, newPassword) =>
     api.put('/api/auth/me', { name, currentPassword, newPassword }),
   deleteAccount: (currentPassword) => api.delete('/api/auth/me', { data: { currentPassword } }),
-  findPassword: (id, name) => api.post('/api/auth/find-password', { id, name })
+  findPassword: (id, name) => api.post('/api/auth/find-password', { id, name }),
+  changeRole: (userId, role) => api.patch(`/api/auth/users/${userId}/role`, { role })
 }
 
 export const attractionApi = {
@@ -30,6 +31,7 @@ export const planApi = {
   delete: (id) => api.delete(`/api/plans/${id}`),
   recommend: (id) => api.post(`/api/plans/${id}/recommend`),
   addItem: (planId, item) => api.post(`/api/plans/${planId}/items`, item),
+  reorderItems: (planId, items) => api.put(`/api/plans/${planId}/items`, items),
   updateLodging: (planId, lodging) => api.patch(`/api/plans/${planId}/lodging`, lodging),
   getDraft: () => api.get('/api/plans/draft'),
   addDraftItem: (item) => api.post('/api/plans/draft/items', item),

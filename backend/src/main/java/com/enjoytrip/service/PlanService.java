@@ -33,9 +33,6 @@ public class PlanService {
         if (title == null || title.isBlank()) {
             throw new IllegalArgumentException("일정 제목을 입력하세요.");
         }
-        if (items == null || items.isEmpty()) {
-            throw new IllegalArgumentException("관광지 조회에서 장소를 추가하세요.");
-        }
         Plan plan = new Plan();
         plan.setId(IdGenerator.nextId());
         plan.setUserId(userId);
@@ -67,6 +64,14 @@ public class PlanService {
     public Plan updateLodging(String planId, String userId, Lodging lodging) {
         Plan plan = findOwnedPlan(planId, userId);
         plan.setLodging(lodging);
+        plan.setUpdatedAt(DateTimeUtil.now());
+        planRepository.save(plan);
+        return plan;
+    }
+
+    public Plan reorderItems(String planId, String userId, List<PlanItem> items) {
+        Plan plan = findOwnedPlan(planId, userId);
+        plan.setItems(items);
         plan.setUpdatedAt(DateTimeUtil.now());
         planRepository.save(plan);
         return plan;

@@ -88,6 +88,16 @@ public class PlanController extends BaseController {
         return ResponseEntity.ok(plan);
     }
 
+    @PutMapping("/{id}/items")
+    public ResponseEntity<Plan> reorderItems(@PathVariable String id,
+                                              @RequestBody List<Map<String, Object>> body,
+                                              HttpSession session) {
+        if (!isLoggedIn(session)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        List<PlanItem> items = parseBodyItems(body);
+        Plan plan = planService.reorderItems(id, currentUser(session).getId(), items);
+        return ResponseEntity.ok(plan);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable String id, HttpSession session) {
         if (!isLoggedIn(session)) {

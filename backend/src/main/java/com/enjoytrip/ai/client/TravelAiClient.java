@@ -34,8 +34,8 @@ public class TravelAiClient {
         Map<String, Object> body = Map.of(
                 "model", model,
                 "messages", List.of(
-                        Map.of("role", "developer",
-                                "content", "당신은 한국 여행 추천 도우미입니다. 제공된 Tool 실행 결과(Resource)만 근거로 답변하고, 그 외 정보는 추측하지 마세요."),
+                        Map.of("role", "system",
+                                "content", "당신은 한국 여행 전문 AI 도우미입니다. 제공된 관광지 데이터만 근거로 답변하고, 없는 정보는 추측하지 마세요. 마크다운 형식(## 소제목, **강조**, - 목록)으로 구조적이고 실용적인 여행 정보를 제공하세요."),
                         Map.of("role", "user", "content", prompt)
                 )
         );

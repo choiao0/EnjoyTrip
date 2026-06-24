@@ -8,20 +8,6 @@
       </div>
     </div>
 
-    <!-- 초안 배너 (PlansView 사용자를 위해 유지) -->
-    <div
-      v-if="draft.length > 0"
-      class="alert border-start border-4 border-primary bg-light d-flex justify-content-between align-items-center mb-4"
-      style="cursor:pointer;"
-      @click="router.push('/attractions')"
-    >
-      <div>
-        <span class="fw-semibold">담아둔 장소가 있습니다</span>
-        <span class="text-muted ms-2 small">{{ draft.length }}개 — 관광정보 검색에서 계속 추가하세요</span>
-      </div>
-      <span class="fw-semibold">관광정보 검색 →</span>
-    </div>
-
     <!-- 탭 -->
     <ul class="nav nav-tabs mb-4">
       <li class="nav-item">
@@ -107,9 +93,22 @@
           </div>
 
           <div v-else-if="modalMode === 'personal'">
-            <p class="text-muted small mb-3">관광정보 검색에서 장소를 담고 계획을 저장합니다.</p>
+            <div class="mb-3">
+              <input
+                v-model="newPersonalTitle"
+                class="form-control"
+                placeholder="여행 이름 *"
+                @keyup.enter="handleCreatePersonal"
+              />
+            </div>
             <div class="d-flex gap-2">
-              <button class="btn btn-indigo flex-grow-1" @click="router.push('/trips/new'); closeModal()">바로 시작</button>
+              <button
+                class="btn btn-indigo flex-grow-1"
+                :disabled="!newPersonalTitle.trim() || creatingPersonal"
+                @click="handleCreatePersonal"
+              >
+                {{ creatingPersonal ? '생성 중...' : '여행 만들기' }}
+              </button>
               <button class="btn btn-outline-secondary" @click="modalMode = null">뒤로</button>
             </div>
           </div>
@@ -174,10 +173,11 @@ const loading = ref(true)
 const tab = ref('all')
 const personalPlans = ref([])
 const groups = ref([])
-const draft = ref([])
 
 const showModal = ref(false)
 const modalMode = ref(null)
+const newPersonalTitle = ref('')
+const creatingPersonal = ref(false)
 const newGroupTitle = ref('')
 const newGroupDesc = ref('')
 const creatingGroup = ref(false)
@@ -199,22 +199,38 @@ const filteredTrips = computed(() => {
 
 onMounted(async () => {
   if (!authStore.user) { loading.value = false; return }
-  const [plansRes, groupsRes, draftRes] = await Promise.allSettled([
+  const [plansRes, groupsRes] = await Promise.allSettled([
     planApi.list(),
-    groupTripApi.list(),
-    planApi.getDraft()
+    groupTripApi.list()
   ])
   if (plansRes.status === 'fulfilled') personalPlans.value = plansRes.value.data
   if (groupsRes.status === 'fulfilled') groups.value = groupsRes.value.data
-  if (draftRes.status === 'fulfilled') draft.value = draftRes.value.data?.items || []
   loading.value = false
 })
 
 function closeModal() {
   showModal.value = false
   modalMode.value = null
+  newPersonalTitle.value = ''
   newGroupTitle.value = ''
   newGroupDesc.value = ''
+}
+
+async function handleCreatePersonal() {
+  if (!newPersonalTitle.value.trim()) {
+    toastStore.show('여행 이름을 입력하세요.', 'warning')
+    return
+  }
+  creatingPersonal.value = true
+  try {
+    const res = await planApi.save({ title: newPersonalTitle.value.trim(), items: [] })
+    closeModal()
+    router.push(`/trips/${res.data.id}`)
+  } catch (e) {
+    toastStore.show(e.response?.data?.error || '여행 생성에 실패했습니다.', 'danger')
+  } finally {
+    creatingPersonal.value = false
+  }
 }
 
 async function handleCreateGroup() {

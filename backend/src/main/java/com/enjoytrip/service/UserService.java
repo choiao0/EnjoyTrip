@@ -65,6 +65,14 @@ public class UserService {
         userRepository.delete(userId);
     }
 
+    public void changeRole(String userId, String role) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+        user.setRole(role);
+        user.setUpdatedAt(DateTimeUtil.now());
+        userRepository.save(user);
+    }
+
     public String findPasswordMessage(String id, String name) {
         if (userRepository.findByIdAndName(id, name).isPresent()) {
             return "비밀번호는 해시로 저장되어 조회할 수 없습니다. 로그인 후 마이페이지에서 새 비밀번호를 설정하세요.";

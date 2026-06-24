@@ -3,12 +3,15 @@
     <div v-if="show" class="modal-backdrop-custom" @click.self="$emit('close')">
       <div class="card shadow p-4" style="width:480px;max-width:92vw;max-height:80vh;display:flex;flex-direction:column;">
         <div class="d-flex justify-content-between align-items-center mb-3">
-          <h5 class="fw-bold mb-0">어느 여행에 추가할까요?</h5>
+          <h5 class="fw-bold mb-0">{{ attraction ? '어느 여행에 추가할까요?' : '어느 여행에서 계속할까요?' }}</h5>
           <button class="btn-close" @click="$emit('close')"></button>
         </div>
 
-        <p class="text-muted small mb-3">
-          <strong>{{ attraction?.title }}</strong>을(를) 추가할 여행을 선택하세요.
+        <p v-if="attraction" class="text-muted small mb-3">
+          <strong>{{ attraction.title }}</strong>을(를) 추가할 여행을 선택하세요.
+        </p>
+        <p v-else class="text-muted small mb-3">
+          관광지를 추가할 여행을 선택하세요.
         </p>
 
         <div v-if="loading" class="text-center py-3">
@@ -65,7 +68,7 @@
           :disabled="!selected || adding || (selected._type === 'new' && !newTitle.trim())"
           @click="doConfirm"
         >
-          {{ adding ? '추가 중...' : '추가하기' }}
+          {{ adding ? '처리 중...' : (attraction ? '추가하기' : '여행 선택') }}
         </button>
       </div>
     </div>
@@ -81,9 +84,9 @@ import { useToastStore } from '../stores/toast.js'
 
 const props = defineProps({
   show: Boolean,
-  attraction: Object  // { contentId, title, lat, lng }
+  attraction: Object  // { contentId, title, lat, lng } | null
 })
-const emit = defineEmits(['close', 'added'])
+const emit = defineEmits(['close', 'added', 'trip-selected'])
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -130,27 +133,42 @@ async function doConfirm() {
     router.push('/auth/login')
     return
   }
-  if (!props.attraction) {
-    toastStore.show('관광지 정보를 찾을 수 없습니다.', 'warning')
-    return
-  }
   if (selected.value._type === 'new' && !newTitle.value.trim()) {
     toastStore.show('여행 이름을 입력하세요.', 'warning')
     return
   }
   adding.value = true
   try {
+    // 선택 전용 모드 (attraction 없음 → 여행 변경 목적)
+    if (!props.attraction) {
+      if (selected.value._type === 'new') {
+        const res = await planApi.save({ title: newTitle.value.trim(), items: [] })
+        const newPlan = res.data
+        emit('trip-selected', { _type: 'personal', id: newPlan.id, title: newPlan.title })
+        toastStore.show(`'${newTitle.value.trim()}' 여행이 만들어졌습니다.`)
+      } else {
+        emit('trip-selected', selected.value)
+      }
+      emit('close')
+      return
+    }
+
+    // 추가 모드 (attraction 있음)
     const a = props.attraction
     const item = { contentId: String(a.contentId), title: a.title, lat: a.lat, lng: a.lng }
 
     if (selected.value._type === 'new') {
-      await planApi.save({ title: newTitle.value.trim(), items: [item] })
+      const res = await planApi.save({ title: newTitle.value.trim(), items: [item] })
+      const newPlan = res.data
+      emit('trip-selected', { _type: 'personal', id: newPlan.id, title: newPlan.title })
       toastStore.show(`'${newTitle.value.trim()}' 여행이 만들어지고 '${a.title}'이(가) 추가됐습니다.`)
     } else if (selected.value._type === 'personal') {
       await planApi.addItem(selected.value.id, item)
+      emit('trip-selected', selected.value)
       toastStore.show(`'${a.title}'을(를) '${selected.value.title}'에 추가했습니다.`)
     } else {
       await groupTripApi.addPlace(selected.value.id, item)
+      emit('trip-selected', selected.value)
       toastStore.show(`'${a.title}'을(를) '${selected.value.title}' 그룹에 추가했습니다.`)
     }
 

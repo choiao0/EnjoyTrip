@@ -2,7 +2,7 @@
   <section class="py-5 container">
     <div class="d-flex justify-content-between mb-4">
       <h2 class="fw-bold">커뮤니티</h2>
-      <router-link class="btn btn-dark" to="/boards/new">글쓰기</router-link>
+      <router-link v-if="authStore.user" class="btn btn-dark" to="/boards/new">글쓰기</router-link>
     </div>
     <table class="table table-hover border rounded-4 overflow-hidden shadow-sm bg-white">
       <thead class="table-light">
@@ -31,7 +31,9 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { boardApi } from '../../api/index.js'
+import { useAuthStore } from '../../stores/auth.js'
 
+const authStore = useAuthStore()
 const posts = ref([])
 onMounted(async () => {
   const res = await boardApi.list()

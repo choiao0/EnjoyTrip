@@ -4,17 +4,19 @@
       <h1 class="display-3 fw-bold mb-3">대한민국 구석구석, EnjoyTrip</h1>
       <p class="lead text-muted mb-5">공공데이터와 경로 추천으로 완성하는 나만의 여행 일정</p>
       <form
-        class="search-bar-modern mx-auto shadow border rounded-pill d-flex p-2 bg-white"
-        style="max-width:640px;"
+        class="search-bar-modern mx-auto shadow border rounded-pill bg-white"
+        style="max-width:640px; display:flex; flex-direction:row; align-items:center; padding:0.4rem 0.5rem;"
         @submit.prevent="handleSearch"
       >
         <input
           v-model="keyword"
           type="text"
-          class="form-control border-0 bg-transparent ps-4"
+          class="border-0 bg-transparent ps-4"
+          style="flex:1; min-width:0; outline:none; box-shadow:none; font-size:1rem; height:44px;"
           placeholder="어디로 떠나시나요?"
+          @keyup.enter="handleSearch"
         >
-        <button class="btn btn-indigo rounded-pill px-4" type="submit">검색</button>
+        <button class="btn btn-indigo rounded-pill" type="submit" style="white-space:nowrap; padding:0.6rem 1.8rem; font-size:1rem;">검색</button>
       </form>
     </div>
   </section>

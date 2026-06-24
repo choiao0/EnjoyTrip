@@ -25,6 +25,7 @@ public class NoticeService {
     }
 
     public Notice create(User user, String title, String content) {
+        ensureAdmin(user);
         validate(title, content);
         Notice notice = new Notice();
         notice.setId(IdGenerator.nextId());
@@ -39,9 +40,9 @@ public class NoticeService {
     }
 
     public Notice update(User user, String id, String title, String content) {
+        ensureAdmin(user);
         validate(title, content);
         Notice notice = findById(id);
-        ensureAuthor(notice, user.getId());
         notice.setTitle(title.trim());
         notice.setContent(content.trim());
         notice.setUpdatedAt(DateTimeUtil.now());
@@ -50,8 +51,7 @@ public class NoticeService {
     }
 
     public void delete(User user, String id) {
-        Notice notice = findById(id);
-        ensureAuthor(notice, user.getId());
+        ensureAdmin(user);
         noticeRepository.delete(id);
     }
 
@@ -61,9 +61,9 @@ public class NoticeService {
         }
     }
 
-    private void ensureAuthor(Notice notice, String userId) {
-        if (!notice.getAuthorId().equals(userId)) {
-            throw new IllegalArgumentException("본인 공지사항만 수정 또는 삭제할 수 있습니다.");
+    private void ensureAdmin(User user) {
+        if (!user.isAdmin()) {
+            throw new IllegalArgumentException("관리자만 공지사항을 작성·수정·삭제할 수 있습니다.");
         }
     }
 }

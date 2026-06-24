@@ -2,7 +2,7 @@
   <section class="py-5 container">
     <div class="d-flex justify-content-between mb-4">
       <h2 class="fw-bold">공지사항</h2>
-      <router-link v-if="authStore.user" class="btn btn-dark" to="/notices/new">글쓰기</router-link>
+      <router-link v-if="authStore.user?.role === 'ADMIN'" class="btn btn-dark" to="/notices/new">글쓰기</router-link>
     </div>
     <table class="table table-hover border rounded-4 overflow-hidden shadow-sm bg-white">
       <thead class="table-light">

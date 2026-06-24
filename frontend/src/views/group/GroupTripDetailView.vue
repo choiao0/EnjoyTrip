@@ -8,7 +8,7 @@
       <!-- 헤더 -->
       <div class="d-flex justify-content-between align-items-start mb-4">
         <div>
-          <router-link to="/trips" class="text-muted small">← 여행 목록</router-link>
+          <router-link to="/trips" class="btn btn-sm btn-outline-secondary mb-2">← 여행 목록</router-link>
           <h2 class="fw-bold mt-1 mb-0">{{ store.currentGroup.title }}</h2>
           <p class="text-muted mb-1">{{ store.currentGroup.description }}</p>
         </div>
@@ -28,13 +28,14 @@
           <div class="card shadow-sm p-3 mb-3">
             <div class="d-flex justify-content-between align-items-center mb-2">
               <h6 class="fw-bold mb-0">장소 목록 ({{ store.places.length }}개)</h6>
-              <router-link to="/attractions" class="btn btn-sm btn-outline-secondary">
-                + 관광정보 검색에서 추가
-              </router-link>
+              <router-link
+                :to="{ path: '/attractions', query: { groupId: groupId, tripTitle: store.currentGroup.title } }"
+                class="btn btn-sm btn-outline-secondary"
+              >+ 관광지 추가</router-link>
             </div>
             <div v-if="store.places.length === 0" class="text-center text-muted py-3 small">
               아직 추가된 장소가 없습니다.
-              <router-link to="/attractions">관광정보 검색</router-link>에서 이 그룹을 선택해 추가하세요.
+              <router-link :to="{ path: '/attractions', query: { groupId: groupId, tripTitle: store.currentGroup.title } }">관광정보 검색</router-link>에서 이 그룹을 선택해 추가하세요.
             </div>
             <div v-else class="d-flex flex-column gap-2">
               <div
