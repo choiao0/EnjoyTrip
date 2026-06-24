@@ -41,7 +41,7 @@ public class CommentService {
     public void delete(User user, String commentId) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new IllegalArgumentException("댓글을 찾을 수 없습니다."));
-        if (!comment.getAuthorId().equals(user.getId())) {
+        if (!user.isAdmin() && !comment.getAuthorId().equals(user.getId())) {
             throw new IllegalArgumentException("본인 댓글만 삭제할 수 있습니다.");
         }
         commentRepository.delete(commentId);

@@ -61,7 +61,7 @@
                 <div class="d-flex align-items-center gap-2">
                   <span class="text-muted" style="font-size:0.75rem;">{{ c.createdAt }}</span>
                   <button
-                    v-if="authStore.user?.id === c.authorId"
+                    v-if="authStore.user?.id === c.authorId || authStore.user?.role === 'ADMIN'"
                     class="btn btn-link btn-sm p-0 text-muted"
                     style="font-size:0.75rem;"
                     @click="deleteComment(c.id)"
