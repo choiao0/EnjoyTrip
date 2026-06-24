@@ -41,9 +41,9 @@
           >
             <!-- 아바타 -->
             <img
-              :src="`https://i.pravatar.cc/36?u=${c.authorId}`"
+              :src="`https://api.dicebear.com/9.x/thumbs/svg?seed=${c.authorId}`"
               class="flex-shrink-0 rounded-circle"
-              style="width:36px;height:36px;object-fit:cover;"
+              style="width:36px;height:36px;background:#f0f0f0;"
               :alt="c.authorName"
             />
 
