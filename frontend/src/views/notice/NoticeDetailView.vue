@@ -1,5 +1,5 @@
 <template>
-  <section class="py-5 container" style="max-width:860px;">
+  <section class="py-5 container">
     <div v-if="notice">
       <div class="bg-white border rounded-4 shadow-sm overflow-hidden">
         <!-- 공지 헤더 -->

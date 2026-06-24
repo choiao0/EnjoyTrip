@@ -1,5 +1,5 @@
 <template>
-  <section class="py-5 container" style="max-width:860px;">
+  <section class="py-5 container">
     <!-- 헤더 -->
     <div class="d-flex justify-content-between align-items-end mb-4">
       <div>
