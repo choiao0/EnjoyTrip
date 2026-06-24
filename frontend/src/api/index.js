@@ -65,3 +65,15 @@ export const aiApi = {
   chat: (body) => api.post('/api/ai/chat', body),
   executeTool: (name, body) => api.post('/api/ai/tools', body, { params: { name } })
 }
+
+export const groupTripApi = {
+  list: () => api.get('/api/groups'),
+  create: (body) => api.post('/api/groups', body),
+  detail: (id) => api.get(`/api/groups/${id}`),
+  delete: (id) => api.delete(`/api/groups/${id}`),
+  join: (id) => api.post(`/api/groups/${id}/join`),
+  leave: (id) => api.post(`/api/groups/${id}/leave`),
+  kickMember: (id, userId) => api.delete(`/api/groups/${id}/members/${userId}`),
+  addPlace: (id, place) => api.post(`/api/groups/${id}/places`, place),
+  removePlace: (id, placeId) => api.delete(`/api/groups/${id}/places/${placeId}`)
+}

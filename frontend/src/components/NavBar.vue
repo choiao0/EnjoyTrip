@@ -17,6 +17,9 @@
             <router-link class="nav-link" active-class="active fw-bold" to="/ai">AI 여행도우미</router-link>
           </li>
           <li class="nav-item">
+            <router-link class="nav-link" active-class="active fw-bold" to="/groups">그룹여행</router-link>
+          </li>
+          <li class="nav-item">
             <router-link class="nav-link" active-class="active fw-bold" to="/hotplaces">핫플레이스</router-link>
           </li>
           <li class="nav-item">

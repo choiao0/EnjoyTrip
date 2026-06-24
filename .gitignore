@@ -9,6 +9,7 @@ Thumbs.db
 .metadata/
 .project
 .classpath
+.settings/
 .idea/
 *.iml
 .vscode/
@@ -20,6 +21,7 @@ frontend/.env*.local
 
 # Backend secrets
 backend/.env
+backend/.env.properties
 
 # Backend build
 backend/target/
