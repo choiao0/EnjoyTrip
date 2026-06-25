@@ -24,11 +24,11 @@
   "admin" : false
 }, {
   "id" : "123",
-  "name" : "123",
-  "pwHash" : "$2a$10$inWgoMaNhM/ySAZBda0vnuDilNfsO/JeBiKOykqw7T8EmyCMrN8Ea",
+  "name" : "test",
+  "pwHash" : "$2a$10$FHpYxxqeOWgb3VtouZ112.uopSelv8eSEqPkqXj6nf3dQx66lArLu",
   "role" : "USER",
   "createdAt" : "2026-06-24 14:01",
-  "updatedAt" : "2026-06-24 14:01",
+  "updatedAt" : "2026-06-25 16:39",
   "admin" : false
 }, {
   "id" : "traveler1",
@@ -69,5 +69,13 @@
   "role" : "USER",
   "createdAt" : "2026-06-24 16:59",
   "updatedAt" : "2026-06-24 16:59",
+  "admin" : false
+}, {
+  "id" : "test1",
+  "name" : "test1",
+  "pwHash" : "$2a$10$iAApiXH2uPk.555zHdcXZO/5IkUR5tb.ZT5vzR5cAABw0/u1W9MFK",
+  "role" : "USER",
+  "createdAt" : "2026-06-25 16:16",
+  "updatedAt" : "2026-06-25 16:16",
   "admin" : false
 } ]

@@ -15,7 +15,7 @@
       </div>
       <div class="d-flex align-items-center gap-2 flex-shrink-0">
         <router-link v-if="returnPath" :to="returnPath" class="btn btn-sm btn-light border">
-          ← 여행으로 돌아가기
+          ← 여행으로 이동
         </router-link>
         <button class="btn btn-sm btn-outline-secondary" @click="showChangeTripModal = true">여행 변경</button>
       </div>
@@ -226,7 +226,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, nextTick } from 'vue'
+import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
 import { Client } from '@stomp/stompjs'
 import SockJS from 'sockjs-client'
@@ -256,9 +256,12 @@ let modalInstance = null
 const initPlanId = route.query.planId || null
 const initGroupId = route.query.groupId ? Number(route.query.groupId) : null
 const returnTitle = route.query.tripTitle || ''
-const returnPath = initPlanId ? `/trips/${initPlanId}`
-                 : initGroupId ? `/groups/${initGroupId}`
-                 : null
+const returnPath = computed(() => {
+  if (!currentContext.value) return null
+  if (currentContext.value._type === 'personal') return `/trips/${currentContext.value.id}`
+  if (currentContext.value._type === 'group') return `/groups/${currentContext.value.id}`
+  return null
+})
 
 const currentContext = ref(null)
 
