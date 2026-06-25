@@ -182,22 +182,45 @@ function updateMapMarkers() {
   groupMap.setBounds(bounds)
 }
 
+function copyToClipboard(text) {
+  if (navigator.clipboard) {
+    return navigator.clipboard.writeText(text)
+  }
+  const el = document.createElement('textarea')
+  el.value = text
+  el.style.position = 'fixed'
+  el.style.opacity = '0'
+  document.body.appendChild(el)
+  el.select()
+  document.execCommand('copy')
+  document.body.removeChild(el)
+  return Promise.resolve()
+}
+
 async function copyCode() {
   const code = store.currentGroup?.inviteCode
   if (!code) {
     toastStore.show('초대 코드를 불러오는 중입니다. 잠시 후 다시 시도하세요.', 'warning')
     return
   }
-  await navigator.clipboard.writeText(code)
-  codeCopied.value = true
-  toastStore.show(`초대 코드 ${code} 복사됨!`)
-  setTimeout(() => { codeCopied.value = false }, 2000)
+  try {
+    await copyToClipboard(code)
+    codeCopied.value = true
+    toastStore.show(`초대 코드 ${code} 복사됨!`)
+    setTimeout(() => { codeCopied.value = false }, 2000)
+  } catch {
+    toastStore.show('클립보드 복사에 실패했습니다.', 'danger')
+  }
 }
 
 async function copyLink() {
-  await navigator.clipboard.writeText(window.location.href)
-  copied.value = true
-  setTimeout(() => { copied.value = false }, 2000)
+  try {
+    await copyToClipboard(window.location.href)
+    copied.value = true
+    setTimeout(() => { copied.value = false }, 2000)
+  } catch {
+    toastStore.show('클립보드 복사에 실패했습니다.', 'danger')
+  }
 }
 
 async function handleRemovePlace(placeId) {
