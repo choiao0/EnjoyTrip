@@ -89,6 +89,7 @@
                           <p v-if="a.address" class="small text-muted mb-1">{{ a.address }}</p>
                         </div>
                         <button
+                          v-if="a.contentId"
                           class="btn btn-sm btn-indigo ms-2 flex-shrink-0"
                           @click="openAddModal(a)"
                         >여행에 추가</button>
@@ -151,7 +152,7 @@ const attractionCards = computed(() => {
     if (!data) continue
     if (Array.isArray(data.items)) items.push(...data.items)
   }
-  return items.filter(a => a.contentId && a.title)
+  return items.filter(a => a.title)
 })
 
 // AI 응답 텍스트에서 언급된 관광지만 필터링 → 없으면 전체 표시
