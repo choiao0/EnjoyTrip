@@ -188,9 +188,18 @@ public class RouteService {
                 .build();
         try {
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            if (response.statusCode() != 200) {
+                throw new IllegalStateException("카카오 모빌리티 API 호출 실패: HTTP " + response.statusCode());
+            }
             JsonNode root = objectMapper.readTree(response.body());
-            JsonNode summary = root.path("routes").path(0).path("summary");
-            JsonNode roads = root.path("routes").path(0).path("sections").path(0).path("roads");
+            JsonNode route = root.path("routes").path(0);
+            int resultCode = route.path("result_code").asInt(-1);
+            if (resultCode != 0) {
+                throw new IllegalStateException(
+                        "카카오 모빌리티 경로 조회 실패 (result_code=" + resultCode + "): " + route.path("result_msg").asText());
+            }
+            JsonNode summary = route.path("summary");
+            JsonNode roads = route.path("sections").path(0).path("roads");
             TravelEdge edge = new TravelEdge();
             edge.durationSec = summary.path("duration").asInt();
             edge.distanceMeters = summary.path("distance").asInt();

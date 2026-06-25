@@ -70,4 +70,12 @@
   "createdAt" : "2026-06-24 16:59",
   "updatedAt" : "2026-06-24 16:59",
   "admin" : false
+}, {
+  "id" : "test1",
+  "name" : "test1",
+  "pwHash" : "$2a$10$iAApiXH2uPk.555zHdcXZO/5IkUR5tb.ZT5vzR5cAABw0/u1W9MFK",
+  "role" : "USER",
+  "createdAt" : "2026-06-25 16:16",
+  "updatedAt" : "2026-06-25 16:16",
+  "admin" : false
 } ]
