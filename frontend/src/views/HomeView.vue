@@ -2,7 +2,7 @@
   <section class="hero-minimal d-flex align-items-center text-center">
     <div class="container">
       <h1 class="display-3 fw-bold mb-3">대한민국 구석구석, EnjoyTrip</h1>
-      <p class="lead text-muted mb-5">공공데이터와 경로 추천으로 완성하는 나만의 여행 일정</p>
+      <p class="lead text-muted mb-5">전국 관광지 탐색부터 실시간 그룹 계획, 최적 경로 추천까지 한 번에</p>
       <form
         class="search-bar-modern mx-auto shadow border rounded-pill bg-white"
         style="max-width:640px; display:flex; flex-direction:row; align-items:center; padding:0.4rem 0.5rem;"
