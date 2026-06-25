@@ -80,9 +80,10 @@ public class HotplaceService {
         if (!hotplace.getUserId().equals(user.getId())) {
             throw new IllegalArgumentException("본인이 저장한 장소만 삭제할 수 있습니다.");
         }
-        if (hotplace.getImagePath() != null) {
+        String imagePath = hotplace.getImagePath();
+        if (imagePath != null && !imagePath.startsWith("http://") && !imagePath.startsWith("https://")) {
             try {
-                Files.deleteIfExists(uploadRoot.resolve(hotplace.getImagePath()));
+                Files.deleteIfExists(uploadRoot.resolve(imagePath));
             } catch (IOException ignored) {}
         }
         hotplaceRepository.delete(id);

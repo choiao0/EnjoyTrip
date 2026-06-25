@@ -48,4 +48,24 @@
   "lng" : 127.1534,
   "imagePath" : "https://picsum.photos/seed/jeonju/400/300",
   "createdAt" : "2026-06-15 09:30"
+}, {
+  "id" : "sample-007",
+  "userId" : "123",
+  "name" : "해운대 해수욕장",
+  "description" : "부산 최고의 해변. 여름에는 사람이 너무 많다. 다 집에 갔으면",
+  "address" : "부산 해운대구 해운대해변로 264",
+  "lat" : 35.1587,
+  "lng" : 129.1604,
+  "imagePath" : "https://picsum.photos/seed/haeundae/400/300",
+  "createdAt" : "2026-06-05 14:30"
+}, {
+  "id" : "sample-010",
+  "userId" : "123",
+  "name" : "전주 한옥마을",
+  "description" : "콩나물국밥 무조건 먹어야 함. 500% 즐기기 위해 꼭 전날에 과음을 할 것!",
+  "address" : "전북 전주시 완산구 기린대로 99",
+  "lat" : 35.815,
+  "lng" : 127.1534,
+  "imagePath" : "https://picsum.photos/seed/jeonju/400/300",
+  "createdAt" : "2026-06-15 09:30"
 } ]
