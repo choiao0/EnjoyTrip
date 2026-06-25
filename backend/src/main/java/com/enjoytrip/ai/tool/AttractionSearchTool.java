@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 public class AttractionSearchTool implements AiTool {
@@ -81,9 +82,23 @@ public class AttractionSearchTool implements AiTool {
             return new AiResource(name(), "관광지 데이터베이스 조회에 실패했습니다.", data);
         }
 
+        List<Map<String, Object>> items = attractions.stream()
+                .map(a -> {
+                    Map<String, Object> m = new LinkedHashMap<>();
+                    m.put("contentId", a.getContentId() != null ? a.getContentId() : "");
+                    m.put("title", a.getTitle() != null ? a.getTitle() : "");
+                    m.put("address", a.getAddress() != null ? a.getAddress() : "");
+                    m.put("overview", a.getOverview() != null ? a.getOverview() : "");
+                    m.put("imageUrl", a.getImageUrl() != null ? a.getImageUrl() : "");
+                    m.put("lat", a.getLat());
+                    m.put("lng", a.getLng());
+                    return m;
+                })
+                .collect(Collectors.toList());
+
         Map<String, Object> data = new LinkedHashMap<>();
         data.put("count", attractions.size());
-        data.put("items", attractions);
+        data.put("items", items);
 
         String summary = attractions.isEmpty()
                 ? "조건에 맞는 관광지를 찾지 못했습니다."
